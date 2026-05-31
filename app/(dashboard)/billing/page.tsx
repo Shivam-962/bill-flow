@@ -281,10 +281,10 @@ export default function BillingPage() {
                   <div
                     key={p.id}
                     onClick={() => !isOutOfStock && addToCart(p, 1)}
-                    className={`bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-[#444749]/60 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:scale-[1.02] hover:-translate-y-0.5 select-none glass-shine-card ${
+                    className={`bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-[#444749]/60 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:shadow-lg hover:shadow-secondary/5 hover:scale-[1.02] hover:-translate-y-0.5 select-none glass-shine-card ${
                       isOutOfStock 
                         ? 'opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-950/20' 
-                        : 'hover:border-primary/50 dark:hover:border-white'
+                        : 'hover:border-secondary/50 dark:hover:border-secondary'
                     }`}
                   >
                     <div className="space-y-1">
@@ -304,7 +304,7 @@ export default function BillingPage() {
                         )}
                       </div>
 
-                      <h5 className="font-semibold text-xs text-slate-800 dark:text-slate-200 line-clamp-2 pt-1 font-sora group-hover:text-primary transition-colors">
+                      <h5 className="font-semibold text-xs text-slate-800 dark:text-slate-200 line-clamp-2 pt-1 font-sora group-hover:text-secondary transition-colors">
                         {p.name}
                       </h5>
                       {p.barcode && (
@@ -315,11 +315,11 @@ export default function BillingPage() {
                     <div className="flex justify-between items-center pt-3 mt-2 border-t border-slate-100 dark:border-slate-850">
                       <div>
                         <span className="text-[10px] text-mutedtxt">Price: </span>
-                        <span className="font-mono-tech font-bold text-sm text-slate-800 dark:text-white">
+                        <span className="font-mono-tech font-bold text-sm text-slate-800 dark:text-secondary">
                           ₹{p.selling_price.toFixed(2)}
                         </span>
                       </div>
-                      <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 group-hover:bg-white group-hover:text-[#111827] flex items-center justify-center text-slate-400 transition-all duration-200 active:scale-90">
+                      <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 group-hover:bg-secondary group-hover:text-[#111827] flex items-center justify-center text-slate-400 transition-all duration-200 active:scale-90">
                         <Plus size={16} />
                       </div>
                     </div>

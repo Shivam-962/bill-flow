@@ -23,6 +23,8 @@ interface ErpState {
   printerSettings: PrinterSettings;
   theme: 'light' | 'dark';
   themeColor: 'blue' | 'green' | 'violet' | 'rose' | 'orange';
+  checkoutCount: number;
+  showFeedbackPrompt: boolean;
   currentUser: { email: string; role: 'admin' | 'manager' | 'cashier' } | null;
 
   // --- POS Actions ---
@@ -49,6 +51,7 @@ interface ErpState {
   updatePrinter: (updates: Partial<PrinterSettings>) => void;
   toggleTheme: () => void;
   setThemeColor: (color: 'blue' | 'green' | 'violet' | 'rose' | 'orange') => void;
+  dismissFeedbackPrompt: () => void;
 
   // --- Auth Actions ---
   login: (email: string, role: 'admin' | 'manager' | 'cashier') => void;
@@ -71,6 +74,8 @@ export const useErpStore = create<ErpState>((set, get) => ({
   printerSettings: { printer_type: 'browser', paper_size_mm: 80 },
   theme: 'light',
   themeColor: 'blue',
+  checkoutCount: 0,
+  showFeedbackPrompt: false,
   currentUser: null,
 
   // --- POS Actions ---
@@ -203,9 +208,18 @@ export const useErpStore = create<ErpState>((set, get) => ({
       items,
     });
 
+    const nextCount = get().checkoutCount + 1;
+    localStorage.setItem('bf_checkout_count', String(nextCount));
+
     // 4. Reload DB data and clear cart
     get().loadData();
     get().clearCart();
+
+    const alreadySubmitted = localStorage.getItem('bf_feedback_submitted') === 'true';
+    set({
+      checkoutCount: nextCount,
+      showFeedbackPrompt: nextCount >= 3 && !alreadySubmitted
+    });
 
     return invoice;
   },
@@ -242,9 +256,22 @@ export const useErpStore = create<ErpState>((set, get) => ({
       .join(' ');
     document.documentElement.classList.add(`theme-${themeColor}`);
 
+    // Load checkout stats
+    const checkoutCount = Number(localStorage.getItem('bf_checkout_count') || '0');
+    const alreadySubmitted = localStorage.getItem('bf_feedback_submitted') === 'true';
+    const showFeedbackPrompt = checkoutCount >= 3 && !alreadySubmitted;
+
     // Check session
+    let currentUser = null;
     const savedUser = localStorage.getItem('bf_session');
-    const currentUser = savedUser ? JSON.parse(savedUser) : null;
+    if (savedUser) {
+      try {
+        currentUser = JSON.parse(savedUser);
+      } catch (err) {
+        console.error('Failed to parse saved session:', err);
+        localStorage.removeItem('bf_session'); // clear corrupted state
+      }
+    }
 
     set({
       business,
@@ -255,6 +282,8 @@ export const useErpStore = create<ErpState>((set, get) => ({
       printerSettings,
       theme: isDark ? 'dark' : 'light',
       themeColor,
+      checkoutCount,
+      showFeedbackPrompt,
       currentUser,
     });
   },
@@ -333,6 +362,10 @@ export const useErpStore = create<ErpState>((set, get) => ({
     document.documentElement.classList.add(`theme-${color}`);
     localStorage.setItem('bf_color_theme', color);
     set({ themeColor: color });
+  },
+
+  dismissFeedbackPrompt: () => {
+    set({ showFeedbackPrompt: false });
   },
 
   // --- Auth Actions ---

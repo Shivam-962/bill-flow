@@ -48,8 +48,15 @@ export default function BillingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [barcodeQuery, setBarcodeQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [newCustomerName, setNewCustomerName] = useState('');
+  
+  // Name-Based Customer search states
+  const [customerNameQuery, setCustomerNameQuery] = useState('');
+  const [newCustomerPhone, setNewCustomerPhone] = useState('');
+  const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
+  
+  // Mobile UI navigation tab
+  const [activeMobileTab, setActiveMobileTab] = useState<'catalog' | 'cart'>('catalog');
+  
   const [isQuickAddCustomerOpen, setIsQuickAddCustomerOpen] = useState(false);
   const [isDiscountInputOpen, setIsDiscountInputOpen] = useState(false);
   const [discountValue, setDiscountValue] = useState<number>(cartDiscount);
@@ -87,35 +94,23 @@ export default function BillingPage() {
     }
   };
 
-  // Customer Phone Lookup
+  // Sync text input with store customer selection
   useEffect(() => {
-    if (customerPhone.length === 10) {
-      const match = customers.find(c => c.phone.trim() === customerPhone.trim());
-      if (match) {
-        selectCustomer(match);
-        setIsQuickAddCustomerOpen(false);
-      } else {
-        setIsQuickAddCustomerOpen(true);
-      }
-    } else if (customerPhone.length === 0) {
-      selectCustomer(null);
-      setIsQuickAddCustomerOpen(false);
+    if (selectedCustomer) {
+      setCustomerNameQuery(selectedCustomer.name);
+    } else {
+      setCustomerNameQuery('');
     }
-  }, [customerPhone, customers, selectCustomer]);
+  }, [selectedCustomer]);
 
-  // Quick Add Customer handler
-  const handleQuickAddCustomerSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCustomerName.trim() || !customerPhone.trim()) return;
-
-    const newCust = addCustomer({
-      name: newCustomerName,
-      phone: customerPhone,
-    });
-    selectCustomer(newCust);
-    setIsQuickAddCustomerOpen(false);
-    setNewCustomerName('');
-  };
+  // Click outside to close suggestion dropdown
+  useEffect(() => {
+    const handleOutsideClick = () => {
+      setShowCustomerSuggestions(false);
+    };
+    window.addEventListener('click', handleOutsideClick);
+    return () => window.removeEventListener('click', handleOutsideClick);
+  }, []);
 
   // Discount modifier
   const handleApplyDiscount = (e: React.FormEvent) => {
@@ -163,10 +158,39 @@ export default function BillingPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-130px)] md:h-[calc(100vh-100px)] relative">
+    <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-100px)] relative">
+      
+      {/* Mobile Tab Toggle */}
+      <div className="flex lg:hidden bg-slate-100 dark:bg-slate-950 p-1 rounded-xl gap-1 w-full no-print">
+        <button
+          type="button"
+          onClick={() => setActiveMobileTab('catalog')}
+          className={`flex-1 py-2.5 text-xs font-bold font-poppins rounded-xl transition-all ${
+            activeMobileTab === 'catalog'
+              ? 'bg-white dark:bg-slate-900 text-primary shadow-sm border border-slate-200/50 dark:border-slate-800/50'
+              : 'text-slate-500'
+          }`}
+        >
+          Catalog ({filteredProducts.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveMobileTab('cart')}
+          className={`flex-1 py-2.5 text-xs font-bold font-poppins rounded-xl transition-all relative ${
+            activeMobileTab === 'cart'
+              ? 'bg-white dark:bg-slate-900 text-primary shadow-sm border border-slate-200/50 dark:border-slate-800/50'
+              : 'text-slate-500'
+          }`}
+        >
+          Terminal Cart ({cart.reduce((sum, item) => sum + item.qty, 0)})
+          {cart.length > 0 && (
+            <span className="absolute top-2 right-4 w-2.5 h-2.5 rounded-full bg-error animate-pulse border-2 border-white dark:border-slate-900"></span>
+          )}
+        </button>
+      </div>
       
       {/* LEFT PORTION: CATALOG & PRODUCT SEARCH (Flexible Width) */}
-      <div className="flex-1 flex flex-col min-w-0 h-full space-y-4">
+      <div className={`flex-1 flex flex-col min-w-0 h-[calc(100vh-180px)] lg:h-full space-y-4 ${activeMobileTab === 'catalog' ? 'flex' : 'hidden lg:flex'}`}>
         
         {/* Scan & Search Control Hub */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -257,23 +281,23 @@ export default function BillingPage() {
                   <div
                     key={p.id}
                     onClick={() => !isOutOfStock && addToCart(p, 1)}
-                    className={`glass-card p-4 rounded-xl flex flex-col justify-between cursor-pointer group transition-all select-none ${
+                    className={`bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:scale-[1.02] hover:-translate-y-0.5 select-none ${
                       isOutOfStock 
-                        ? 'opacity-50 cursor-not-allowed bg-slate-100/50' 
+                        ? 'opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-950/20' 
                         : 'hover:border-primary/50 dark:hover:border-primary/50'
                     }`}
                   >
                     <div className="space-y-1">
                       {/* Stock indicator badge */}
                       <div className="flex justify-between items-start gap-1">
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
                           isOutOfStock
-                            ? 'bg-error/15 text-error'
+                            ? 'bg-red-500/10 text-red-500 border border-red-500/10'
                             : isLowStock
-                              ? 'bg-warning/15 text-warning'
-                              : 'bg-success/15 text-success'
+                              ? 'bg-amber-500/10 text-amber-500 border border-amber-500/10'
+                              : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/10'
                         }`}>
-                          {isOutOfStock ? 'OUT OF STOCK' : `Stock: ${p.stock_qty}`}
+                          {isOutOfStock ? 'OUT' : `Stock: ${p.stock_qty}`}
                         </span>
                         {p.batch_no && (
                           <span className="text-[9px] font-mono text-slate-400">Lot:{p.batch_no}</span>
@@ -308,35 +332,84 @@ export default function BillingPage() {
       </div>
 
       {/* RIGHT PORTION: CART WORKSPACE & CHECKOUT PANEL (Sticky Sidebar layout) */}
-      <div className="w-full lg:w-96 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl flex flex-col h-full overflow-hidden">
+      <div className={`w-full lg:w-96 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-180px)] lg:h-full overflow-hidden ${activeMobileTab === 'cart' ? 'flex' : 'hidden lg:flex'}`}>
         
         {/* Customer Select Form */}
-        <div className="p-4 border-b border-slate-100 dark:border-slate-850 bg-slate-50/50 dark:bg-slate-950/20">
+        <div 
+          className="p-4 border-b border-slate-100 dark:border-slate-850 bg-slate-50/50 dark:bg-slate-950/20 relative"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <label className="text-xs font-bold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
                 <User size={14} className="text-primary" />
-                Customer Account phone
+                Customer Account Name
               </label>
               {selectedCustomer && (
-                <span className="text-[10px] font-bold text-success flex items-center gap-1">
-                  <Sparkles size={10} /> Auto-Linked
-                </span>
+                <button
+                  onClick={() => selectCustomer(null)}
+                  className="text-[10px] font-bold text-red-500 hover:underline"
+                >
+                  Clear
+                </button>
               )}
             </div>
 
             <div className="relative">
               <input
-                type="tel"
-                maxLength={10}
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value.replace(/\D/g, ''))}
-                placeholder="Enter customer 10-digit number..."
+                type="text"
+                value={customerNameQuery}
+                onChange={(e) => {
+                  setCustomerNameQuery(e.target.value);
+                  setShowCustomerSuggestions(true);
+                  if (selectedCustomer && e.target.value !== selectedCustomer.name) {
+                    selectCustomer(null);
+                  }
+                }}
+                onFocus={() => setShowCustomerSuggestions(true)}
+                placeholder="Type customer name to search..."
                 className="w-full px-4 py-2 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-primary rounded-xl text-xs outline-none transition"
               />
+
+              {/* Suggestions Dropdown panel */}
+              {showCustomerSuggestions && customerNameQuery && !selectedCustomer && (
+                <div className="absolute left-0 right-0 top-full mt-1.5 z-30 max-h-48 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl shadow-xl divide-y divide-slate-100 dark:divide-slate-850">
+                  {customers
+                    .filter(c => c.name.toLowerCase().includes(customerNameQuery.toLowerCase()))
+                    .map(c => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => {
+                          selectCustomer(c);
+                          setCustomerNameQuery(c.name);
+                          setShowCustomerSuggestions(false);
+                          setIsQuickAddCustomerOpen(false);
+                        }}
+                        className="w-full px-4 py-2.5 text-left text-xs hover:bg-slate-50 dark:hover:bg-slate-800 flex justify-between items-center"
+                      >
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">{c.name}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">+91 {c.phone}</span>
+                      </button>
+                    ))}
+                  {customers.filter(c => c.name.toLowerCase().includes(customerNameQuery.toLowerCase())).length === 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsQuickAddCustomerOpen(true);
+                        setShowCustomerSuggestions(false);
+                      }}
+                      className="w-full px-4 py-3 text-left text-xs text-primary hover:bg-slate-50 dark:hover:bg-slate-800 font-bold flex items-center gap-1.5"
+                    >
+                      <PlusCircle size={14} />
+                      Register "{customerNameQuery}" as new customer
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* If Customer Matches, show Details summary card */}
+            {/* Linked customer profile card */}
             {selectedCustomer && (
               <div className="p-3 bg-primary/5 border border-primary/10 rounded-xl space-y-1.5 animate-in fade-in slide-in-from-top duration-200">
                 <div className="flex justify-between items-center text-xs font-semibold">
@@ -345,7 +418,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-semibold text-slate-500 pt-0.5">
                   <span className="flex items-center gap-1">
-                    Udhar Credit: <span className={selectedCustomer.credit_balance > 0 ? 'text-error font-bold' : 'text-success'}>
+                    Udhar Balance: <span className={selectedCustomer.credit_balance > 0 ? 'text-red-500 font-bold' : 'text-emerald-500'}>
                       ₹{selectedCustomer.credit_balance.toFixed(2)}
                     </span>
                   </span>
@@ -354,25 +427,48 @@ export default function BillingPage() {
               </div>
             )}
 
-            {/* Quick Add Customer Panel */}
-            {isQuickAddCustomerOpen && (
-              <form onSubmit={handleQuickAddCustomerSubmit} className="p-3 bg-warning/5 border border-warning/10 rounded-xl space-y-2 animate-in fade-in slide-in-from-top duration-200">
-                <p className="text-[10px] font-bold text-warning uppercase">Customer Not Registered</p>
-                <div className="flex gap-2">
+            {/* Quick Register form */}
+            {isQuickAddCustomerOpen && !selectedCustomer && (
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!customerNameQuery.trim() || !newCustomerPhone.trim()) return;
+                  const newCust = addCustomer({
+                    name: customerNameQuery,
+                    phone: newCustomerPhone,
+                  });
+                  selectCustomer(newCust);
+                  setCustomerNameQuery(newCust.name);
+                  setIsQuickAddCustomerOpen(false);
+                  setNewCustomerPhone('');
+                }}
+                className="p-3 bg-warning/5 border border-warning/10 rounded-xl space-y-2 animate-in fade-in slide-in-from-top duration-200"
+              >
+                <p className="text-[10px] font-bold text-warning uppercase">Register New Customer</p>
+                <div className="flex flex-col gap-2">
                   <input
                     type="text"
-                    required
-                    value={newCustomerName}
-                    onChange={(e) => setNewCustomerName(e.target.value)}
-                    placeholder="Enter Customer Name"
-                    className="flex-1 px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-warning rounded-lg text-xs outline-none transition"
+                    disabled
+                    value={customerNameQuery}
+                    className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs outline-none opacity-80"
                   />
-                  <button
-                    type="submit"
-                    className="px-3 bg-warning text-white rounded-lg text-xs font-semibold hover:bg-warning/90"
-                  >
-                    Quick Add
-                  </button>
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      required
+                      maxLength={10}
+                      value={newCustomerPhone}
+                      onChange={(e) => setNewCustomerPhone(e.target.value.replace(/\D/g, ''))}
+                      placeholder="Enter 10-digit phone number"
+                      className="flex-1 px-3 py-1.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-warning rounded-lg text-xs outline-none transition"
+                    />
+                    <button
+                      type="submit"
+                      className="px-3 bg-warning text-white rounded-lg text-xs font-semibold hover:bg-warning/90"
+                    >
+                      Quick Add
+                    </button>
+                  </div>
                 </div>
               </form>
             )}
@@ -407,25 +503,25 @@ export default function BillingPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => updateCartQty(item.product.id, item.qty - 1)}
-                    className="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 hover:bg-slate-50 text-slate-500 flex items-center justify-center"
+                    className="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 hover:bg-slate-50 text-slate-500 flex items-center justify-center active:scale-95 transition-all"
                   >
-                    <Minus size={12} />
+                    <Minus size={14} />
                   </button>
                   <span className="font-mono text-xs font-bold w-6 text-center text-slate-800 dark:text-white">
                     {item.qty}
                   </span>
                   <button
                     onClick={() => updateCartQty(item.product.id, item.qty + 1)}
-                    className="w-6 h-6 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 hover:bg-slate-50 text-slate-500 flex items-center justify-center"
+                    className="w-9 h-9 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 hover:bg-slate-50 text-slate-500 flex items-center justify-center active:scale-95 transition-all"
                   >
-                    <Plus size={12} />
+                    <Plus size={14} />
                   </button>
                   
                   <button
                     onClick={() => removeFromCart(item.product.id)}
-                    className="p-1 rounded-lg text-slate-300 hover:text-error hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1"
+                    className="p-2 rounded-xl text-slate-350 hover:text-error hover:bg-red-50 dark:hover:bg-red-950/20 transition-all ml-1 active:scale-90"
                   >
-                    <Trash2 size={13} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>

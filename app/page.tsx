@@ -34,71 +34,91 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slatebg dark:bg-darkbg transition-colors duration-200">
       
+      {/* Google SEO JSON-LD Structured Data Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "BillFlow ERP",
+            "operatingSystem": "Windows, Android, iOS, Web",
+            "applicationCategory": "BusinessApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "INR"
+            },
+            "description": "Smart Billing, Inventory, and Customer Management System tailored for retail storefronts."
+          })
+        }}
+      />
+
       {/* 1. Global Navigation Bar */}
-      <header className="sticky top-0 right-0 z-40 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-lg shadow-md shadow-primary/20">
+      <header className="sticky top-0 right-0 z-40 w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/50 px-6 py-4 flex items-center justify-between shadow-sm transition-all duration-300">
+        <div className="flex items-center gap-2 group cursor-pointer">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
             B
           </div>
-          <span className="font-poppins font-bold text-lg text-slate-800 dark:text-white tracking-tight">
-            BillFlow<span className="text-primary">.</span>
+          <span className="font-poppins font-extrabold text-xl text-slate-850 dark:text-white tracking-tight">
+            BillFlow<span className="text-primary bg-clip-text">.</span>
           </span>
         </div>
 
         {/* Desktop Links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
-          <a href="#features" className="hover:text-primary transition">Features</a>
-          <a href="#pricing" className="hover:text-primary transition">Pricing</a>
-          <a href="#industries" className="hover:text-primary transition">Industries</a>
-          <a href="#faq" className="hover:text-primary transition">FAQ</a>
+        <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-500 dark:text-slate-400">
+          <a href="#features" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Features</a>
+          <a href="#pricing" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Pricing</a>
+          <a href="#industries" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Industries</a>
+          <a href="#faq" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">FAQ</a>
         </nav>
 
         {/* Call to Actions */}
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-primary transition">
+          <Link href="/login" className="text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-primary transition-colors">
             Sign In
           </Link>
           <Link
             href="/register"
-            className="px-4 py-2 bg-primary text-white text-xs font-poppins font-bold rounded-xl shadow-md shadow-primary/10 hover:bg-primary/95 transition-all flex items-center gap-1"
+            className="px-5 py-2.5 bg-primary text-white text-xs font-poppins font-bold rounded-xl shadow-md shadow-primary/10 hover:bg-primary/95 hover:scale-[1.03] transition-all flex items-center gap-1.5"
           >
             Create Store
-            <ArrowRight size={12} />
+            <ArrowRight size={13} />
           </Link>
         </div>
       </header>
 
       {/* 2. Hero Header Section */}
-      <section className="relative px-6 py-20 md:py-32 flex flex-col items-center text-center overflow-hidden">
-        {/* Background glow decals */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl -z-10"></div>
-        <div className="absolute top-1/3 left-1/3 w-[300px] h-[300px] bg-secondary/10 rounded-full blur-3xl -z-10"></div>
+      <section className="relative px-6 py-24 md:py-36 flex flex-col items-center text-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent">
+        {/* Decorative background gradients */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/10 to-secondary/5 rounded-full blur-3xl -z-10 animate-pulse duration-[6s]"></div>
 
-        <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold font-mono tracking-wider uppercase">
-            <Sparkles size={12} />
+        <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-mono tracking-wider uppercase border border-primary/20 shadow-sm">
+            <Sparkles size={13} className="animate-spin duration-[4s]" />
             Enterprise Retail ERP Made Simple
           </div>
 
-          <h1 className="font-poppins font-bold text-4xl md:text-6xl text-slate-800 dark:text-white leading-tight tracking-tight">
-            Fast POS Billing & Cloud <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Inventory SaaS</span>
+          <h1 className="font-poppins font-black text-5xl md:text-7xl text-slate-800 dark:text-white leading-[1.1] tracking-tight">
+            Fast POS Billing & Cloud <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">Inventory SaaS</span>
           </h1>
 
-          <p className="text-base md:text-lg text-mutedtxt dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm md:text-base text-mutedtxt dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
             Generate tax invoices in under 3 seconds, manage stock quantities dynamically, track customer credit accounts, and instantly deliver PDF receipts directly on WhatsApp.
           </p>
 
           <div className="pt-4 flex flex-wrap justify-center gap-4">
             <Link
               href="/register"
-              className="px-6 py-3 bg-primary text-white text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/95 hover:scale-105 transition-all flex items-center gap-2"
+              className="px-8 py-3.5 bg-primary text-white text-xs font-poppins font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/95 hover:scale-[1.04] transition-all flex items-center gap-2"
             >
               Get Started for Free
-              <ArrowRight size={16} />
+              <ArrowRight size={15} />
             </Link>
             <Link
               href="/login"
-              className="px-6 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl hover:bg-slate-50 transition"
+              className="px-8 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:scale-[1.02] shadow-sm transition-all"
             >
               Access Demo Login
             </Link>

@@ -36,11 +36,19 @@ module.exports = {
         cardbg: "#FFFFFF",
         darkcardbg: "#202020",
         txt: "#111827",
-        mutedtxt: "#64748B"
+        mutedtxt: "#64748B",
+        slate: {
+          150: '#f1f5f9',
+          250: '#cbd5e1',
+          350: '#94a3b8',
+          750: '#334155',
+          850: '#1e293b',
+        }
       },
       fontFamily: {
         sans: ["Sora", "Inter", "sans-serif"],
         poppins: ["Sora", "Poppins", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       }
     },
   },

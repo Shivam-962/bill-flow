@@ -332,7 +332,7 @@ export default function BillingPage() {
       </div>
 
       {/* RIGHT PORTION: CART WORKSPACE & CHECKOUT PANEL (Sticky Sidebar layout) */}
-      <div className={`w-full lg:w-96 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-180px)] lg:h-full overflow-hidden ${activeMobileTab === 'cart' ? 'flex' : 'hidden lg:flex'}`}>
+      <div className={`w-full lg:w-96 glass-panel rounded-2xl shadow-xl flex flex-col h-[calc(100vh-180px)] lg:h-full overflow-hidden ${activeMobileTab === 'cart' ? 'flex' : 'hidden lg:flex'}`}>
         
         {/* Customer Select Form */}
         <div 
@@ -631,25 +631,25 @@ export default function BillingPage() {
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => handleCameraScanSimulate('8901063013284')}
-                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-left px-3 text-[10px] rounded-lg truncate font-medium"
+                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-slate-800 dark:text-slate-200 text-left px-3 text-[10px] rounded-lg truncate font-medium transition-colors"
                 >
                   Marie Gold Biscuit
                 </button>
                 <button
                   onClick={() => handleCameraScanSimulate('8901725181228')}
-                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-left px-3 text-[10px] rounded-lg truncate font-medium"
+                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-slate-800 dark:text-slate-200 text-left px-3 text-[10px] rounded-lg truncate font-medium transition-colors"
                 >
                   Aashirvaad Atta 5kg
                 </button>
                 <button
                   onClick={() => handleCameraScanSimulate('8901396328639')}
-                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-left px-3 text-[10px] rounded-lg truncate font-medium"
+                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-slate-800 dark:text-slate-200 text-left px-3 text-[10px] rounded-lg truncate font-medium transition-colors"
                 >
                   Dettol Liquid Refill
                 </button>
                 <button
                   onClick={() => handleCameraScanSimulate('8901262010019')}
-                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-left px-3 text-[10px] rounded-lg truncate font-medium"
+                  className="py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 text-slate-800 dark:text-slate-200 text-left px-3 text-[10px] rounded-lg truncate font-medium transition-colors"
                 >
                   Amul Butter 100g
                 </button>
@@ -665,6 +665,18 @@ export default function BillingPage() {
         onClose={() => setIsPaymentModalOpen(false)}
         totalAmount={netPayable}
       />
+
+      {/* Floating Action Button (FAB) for Quick Scanner */}
+      <button
+        onClick={() => {
+          setIsCameraScannerOpen(true);
+          setScanMessage('Position product barcode in front of the camera');
+        }}
+        title="Quick Scan Barcode"
+        className="fixed bottom-24 right-6 lg:bottom-8 lg:right-8 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#7c3aed] hover:to-[#0891b2] text-white flex items-center justify-center shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-110 active:scale-95 transition-all duration-200 group no-print"
+      >
+        <Camera size={24} className="group-hover:rotate-12 transition-transform duration-200" />
+      </button>
     </div>
   );
 }

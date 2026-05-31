@@ -73,7 +73,7 @@ export const useErpStore = create<ErpState>((set, get) => ({
   invoices: [],
   printerSettings: { printer_type: 'browser', paper_size_mm: 80 },
   theme: 'light',
-  themeColor: 'blue',
+  themeColor: 'violet',
   checkoutCount: 0,
   showFeedbackPrompt: false,
   currentUser: null,

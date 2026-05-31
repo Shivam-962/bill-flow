@@ -281,10 +281,10 @@ export default function BillingPage() {
                   <div
                     key={p.id}
                     onClick={() => !isOutOfStock && addToCart(p, 1)}
-                    className={`bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:scale-[1.02] hover:-translate-y-0.5 select-none glass-shine-card ${
+                    className={`bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-[#444749]/60 p-4 rounded-2xl flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:scale-[1.02] hover:-translate-y-0.5 select-none glass-shine-card ${
                       isOutOfStock 
                         ? 'opacity-40 cursor-not-allowed bg-slate-50 dark:bg-slate-950/20' 
-                        : 'hover:border-primary/50 dark:hover:border-primary/50'
+                        : 'hover:border-primary/50 dark:hover:border-white'
                     }`}
                   >
                     <div className="space-y-1">
@@ -319,8 +319,8 @@ export default function BillingPage() {
                           ₹{p.selling_price.toFixed(2)}
                         </span>
                       </div>
-                      <div className="w-6 h-6 rounded-lg bg-slate-50 dark:bg-slate-800 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-slate-400 transition-colors">
-                        <Plus size={14} />
+                      <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 group-hover:bg-white group-hover:text-[#111827] flex items-center justify-center text-slate-400 transition-all duration-200 active:scale-90">
+                        <Plus size={16} />
                       </div>
                     </div>
                   </div>

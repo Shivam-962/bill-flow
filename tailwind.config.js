@@ -32,15 +32,15 @@ module.exports = {
           foreground: "#FFFFFF",
         },
         slatebg: "#F8FAFC",
-        darkbg: "#0F172A",
+        darkbg: "#131313",
         cardbg: "#FFFFFF",
-        darkcardbg: "#1E293B",
+        darkcardbg: "#202020",
         txt: "#111827",
         mutedtxt: "#64748B"
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        poppins: ["Poppins", "sans-serif"],
+        sans: ["Sora", "Inter", "sans-serif"],
+        poppins: ["Sora", "Poppins", "sans-serif"],
       }
     },
   },

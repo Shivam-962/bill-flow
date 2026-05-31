@@ -79,7 +79,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased relative min-h-screen">
+        <div className="mesh-glow-container">
+          <div className="mesh-blob-1"></div>
+          <div className="mesh-blob-2"></div>
+          <div className="mesh-blob-3"></div>
+        </div>
         {children}
       </body>
     </html>

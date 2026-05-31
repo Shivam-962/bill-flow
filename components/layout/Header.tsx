@@ -85,11 +85,7 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         </button>
 
-        {/* Notification Bell */}
-        <div className="relative p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-          <Bell size={16} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error ring-2 ring-white dark:ring-slate-900"></span>
-        </div>
+
 
         {/* Main Quick Action Button (Visible on tablet/desktop) */}
         {pathname !== '/billing' && (

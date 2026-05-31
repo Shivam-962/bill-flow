@@ -37,6 +37,7 @@ export interface Product {
   low_stock_threshold: number;
   expiry_date?: string;
   batch_no?: string;
+  image_url?: string;
 }
 
 export interface Customer {
@@ -128,13 +129,12 @@ export const supabase = isSupabaseConfigured ? createClient(supabaseUrl, supabas
 
 // --- Mock Seed Data ---
 const DEFAULT_PRODUCTS: Product[] = [
-  { id: 'p1', name: 'Britannia Marie Gold Biscuit 250g', category_id: 'cat1', barcode: '8901063013284', sku: 'MARIE250', purchase_price: 24.0, selling_price: 30.0, gst_rate: 18, stock_qty: 45, low_stock_threshold: 10, batch_no: 'B291', expiry_date: '2026-12-31' },
-  { id: 'p2', name: 'Tata Salt 1kg', category_id: 'cat1', barcode: '8901058002316', sku: 'SALT1K', purchase_price: 20.0, selling_price: 25.0, gst_rate: 0, stock_qty: 120, low_stock_threshold: 15 },
-  { id: 'p3', name: 'Aashirvaad Shudh Chakki Atta 5kg', category_id: 'cat1', barcode: '8901725181228', sku: 'ATTA5K', purchase_price: 210.0, selling_price: 260.0, gst_rate: 5, stock_qty: 3, low_stock_threshold: 5 },
-  { id: 'p4', name: 'Dettol Liquid Handwash Refill 175ml', category_id: 'cat2', barcode: '8901396328639', sku: 'DETT175', purchase_price: 75.0, selling_price: 99.0, gst_rate: 18, stock_qty: 24, low_stock_threshold: 6 },
-  { id: 'p5', name: 'Colgate Strong Teeth Toothpaste 200g', category_id: 'cat2', barcode: '8901117101035', sku: 'COLG200', purchase_price: 80.0, selling_price: 110.0, gst_rate: 18, stock_qty: 2, low_stock_threshold: 5 },
-  { id: 'p6', name: 'Amul Butter 100g', category_id: 'cat3', barcode: '8901262010019', sku: 'BUTTER100', purchase_price: 46.0, selling_price: 56.0, gst_rate: 12, stock_qty: 18, low_stock_threshold: 5 },
-  { id: 'p7', name: 'Mother Dairy Full Cream Milk 1L', category_id: 'cat3', barcode: '8901648001047', sku: 'MILK1L', purchase_price: 58.0, selling_price: 66.0, gst_rate: 0, stock_qty: 50, low_stock_threshold: 10, expiry_date: '2026-05-28' },
+  { id: 'p1', name: 'Crystal Still', category_id: 'cat1', barcode: '8901063013284', sku: 'GW-202', purchase_price: 30.0, selling_price: 45.0, gst_rate: 18, stock_qty: 45, low_stock_threshold: 10, batch_no: 'B291', expiry_date: '2026-12-31', image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDxPrsMx6mtuyKWU8OSXRJlVt2goIskVXyk3RuNHlfIYZghpi0zJk_Q0z5HSVSoYoN1Dbdixj_H-8pyFh97ieAZ6j6-IO7uRrKALbv4Ux47V7Mj-6U9JKOVOPII-NXta0LRYTW1Bi3nUVBafNNmgscE1ksbRBJ2GN6yr8fNl6pcthevP5NvsKdKb06jdWgjwQyNpGlA4P7wENb62EkhVHRI-j0s13-Gqq_uIuR_V-ZtvPqDbEz1ZpI4HLBHq-OcA4Ov6gZXg4XB8Wku' },
+  { id: 'p2', name: 'Vintage Cola', category_id: 'cat1', barcode: '8901058002316', sku: 'GW-105', purchase_price: 25.0, selling_price: 39.5, gst_rate: 18, stock_qty: 120, low_stock_threshold: 15, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEqnwZo3MNj1RGbXGis7xN0uNbCZahKVriVN9bn-DL9FAArCeYaikOqxsJ5aQydsdFoXvlpbtdwZd9sFyN2gCPFo_5XLWvFa9s4CGGQuslOXJl117jE2dU7JyssgK8BgVmU7PaZcy7_s96add8vtoMqxX2DYIyeZfduSkwkG5qoV3-cMcI2tiqcjeR3gQGHh1twp8BrN0wURfK-0uL5GAmy_N-qAovIRpsZb2OTIBLapXM7Zg5UnKOZCJtToe0-kPJgtX5Dg-ij13P' },
+  { id: 'p3', name: 'Solar Citrus', category_id: 'cat1', barcode: '8901725181228', sku: 'GW-308', purchase_price: 35.0, selling_price: 52.0, gst_rate: 18, stock_qty: 24, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBtuFnQbqK3eDpbeZ0eH0PDzypd_UnV9v97kXlPb_OfvsNrCcSEmldOSpEngyoGhGgk3NkYKha8LWrUj7oUbnBglc2HfGE1GDsBGJIXgWXMEe6RjqesG3n7RgdSzTmM8-c7qY6Ff-mGGVLhWzf8ITpn9h03KSWSSbOKSQ9l_1zXHupImXsa4-R0h91TqT5OYBI-Lkr1IqNt4sAyKIS1LTUPURpm2ev6myxr5HEU4p3C4_DKhNqyBwO4Jh-bM9gttIp03gzJbuh_HC4n' },
+  { id: 'p4', name: 'Glacier Lime', category_id: 'cat1', barcode: '8901396328639', sku: 'GW-401', purchase_price: 32.0, selling_price: 47.5, gst_rate: 18, stock_qty: 32, low_stock_threshold: 6, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDotAzFZK3Lgx_ebYSzGtIkqyR2U2vEJgaucjF2L_mvQLC4GJ7YAY5Emkq5PtkL6Ds3JJ5sm37S9qOGabnW3OVS6bbVhTyRZquDFd-bBy2bwBcD5YLo27W8DufGq0T4STPLwmcLDvh_JC15h_hSqRyQOKV1nQwtR9YGdZJNrgcq2tnzjYkhpVR23V-U08bu8REJTl4R5xtI8JaXIEG3QrcuQo_osTg0uJry1AZj2ZnykvzgsX7HgXwG2Kr1rwFAS0AslhKNwC9l_OC' },
+  { id: 'p5', name: 'Artisanal Quartet', category_id: 'cat2', barcode: '8901117101035', sku: 'GW-ALL', purchase_price: 100.0, selling_price: 145.0, gst_rate: 18, stock_qty: 15, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida/ADBb0ui7PO_WSXawmHRt65PtLqRD8mwRR3YWnxab-lLAbKnSWjCt8saAVwFdoQSwm8A2pkFadOookBDTcGNKuBAgXJcfYHs0QUsSddzDBRqdu3FZ_ZzNxT1yqo-NO8Gw2D5txD1j5UP0a8uBIFGQp_dmZqCIuUf4pAUG3KLH7ZrrgEh1QNp0-7JHEKadXsjjT_xUJRAJIlti_8BoGxP0MuFSPcHujxFZIdLIcyyk9duoIJCgI21Zlo6zzNjRDWyO' },
+  { id: 'p6', name: 'Silver Label', category_id: 'cat2', barcode: '8901262010019', sku: 'GW-SILVER', purchase_price: 55.0, selling_price: 80.0, gst_rate: 18, stock_qty: 18, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDY4mOh4iIvppZi2MEkT5dr2BTkifvg4VZiv4Xc8RwPbV1pIAjDhK8CFiA33Bkkv18AsFsbgAkUpLD8ZH6WEzjy2X1QclYTyg0LH_ZrtZd3fOTnMiJHUz3dw7hPYXlqVMWPflto5OyK5EbXuKQcI0TWtVNcg-QWMEU6lzSJ_B_BdYu4QPww389x0a6OooCnaV9ZuJAeg2-eiu7Jaqe_y_bCGTCLyFbrznmUi9tlaQsFGlM4OV3YCcI4pvywk5D4_IffOIJ6xQ8MGjhS' },
 ];
 
 const DEFAULT_CUSTOMERS: Customer[] = [
@@ -144,18 +144,17 @@ const DEFAULT_CUSTOMERS: Customer[] = [
 ];
 
 const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'cat1', name: 'Grocery & Staples' },
-  { id: 'cat2', name: 'Personal Care & Hygiene' },
-  { id: 'cat3', name: 'Dairy & Fresh Products' }
+  { id: 'cat1', name: 'Sparkling & Still' },
+  { id: 'cat2', name: 'Artisanal & Reserve' }
 ];
 
 const DEFAULT_BUSINESS: Business = {
   id: 'b-default',
-  name: 'BillFlow Supermart',
+  name: 'Glacier White POS',
   gstin: '29GSTIN1234F1Z0',
   phone: '9999888877',
   address: '12th Main Road, HSR Layout, Sector 6, Bangalore - 560102',
-  invoice_prefix: 'BF',
+  invoice_prefix: 'GW',
   currency: 'INR',
 };
 

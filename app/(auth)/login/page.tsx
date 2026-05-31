@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useErpStore } from '@/store/useErpStore';
 import Link from 'next/link';
-import { ShieldCheck, Mail, Phone, Lock, Eye, EyeOff } from 'lucide-react';
+import { ShieldCheck, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -57,192 +57,242 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slatebg dark:bg-darkbg px-4 py-12 transition-colors duration-200">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-xl rounded-2xl p-8 space-y-6">
-        
-        {/* Brand Logo and Subtitle */}
-        <div className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-primary/20">
-            B
-          </div>
-          <h2 className="font-poppins font-bold text-2xl text-slate-800 dark:text-white tracking-tight">
-            Welcome to BillFlow ERP
-          </h2>
-          <p className="text-xs text-mutedtxt dark:text-slate-400 font-medium">
-            Sign in to access your dashboard and active POS terminal.
+    <div className="min-h-screen flex items-center justify-center bg-[#131314] px-4 py-12 relative overflow-hidden">
+
+      {/* Background Visual Embellishment */}
+      <div className="fixed bottom-0 left-0 w-full h-[30vh] opacity-20 pointer-events-none z-0">
+        <img
+          className="w-full h-full object-cover"
+          alt="Server room ambiance"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ5dSnmnhWBV1CxH0KhTRY2FLTUBq9kuWhcqozKUFAIcYgvOT0j2BYXvs8cDIVcIwHwFbV9wbAroS2tMOtWfHr-8d6pwu7AsLSQmGyB9xgDR3cB3F934elfujujRAwAs9vOBU18b3amrhgQWn616TbTEy4sr-qeynkOgfa97CVtoWp99ATApbRhuayLXIATS8zHj3bgKVhxGD4Q-teFwEEzywwHgmpgrRsaqA-XkiFEqtL3mJVfaeqNxpI-TlTkdHVBox2PLb0ZCTz"
+        />
+      </div>
+
+      <main className="w-full max-w-[440px] px-4 md:px-0 relative z-10">
+
+        {/* Brand Identity */}
+        <div className="text-center mb-8">
+          <h1 className="font-sans text-2xl font-extrabold tracking-tight mb-2 text-primary">
+            BillFlow
+          </h1>
+          <p className="font-mono text-xs text-[#cbc3d7] tracking-[0.2em] uppercase">
+            Enterprise Resource Management
           </p>
         </div>
 
-        {/* Login Mode Toggle Tab */}
-        <div className="grid grid-cols-2 p-1 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200/30">
-          <button
-            type="button"
-            onClick={() => { setLoginMode('email'); setError(''); }}
-            className={`py-2 rounded-lg text-xs font-semibold font-poppins transition-all ${
-              loginMode === 'email'
-                ? 'bg-white dark:bg-slate-850 text-primary shadow-sm'
-                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            Email Login
-          </button>
-          <button
-            type="button"
-            onClick={() => { setLoginMode('phone'); setError(''); }}
-            className={`py-2 rounded-lg text-xs font-semibold font-poppins transition-all ${
-              loginMode === 'phone'
-                ? 'bg-white dark:bg-slate-850 text-primary shadow-sm'
-                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-            }`}
-          >
-            OTP Login
-          </button>
-        </div>
-
-        {/* Error Alert */}
-        {error && (
-          <div className="p-3.5 text-xs font-semibold text-error bg-error/10 border border-error/20 rounded-xl">
-            {error}
+        {/* Login Card */}
+        <div className="bg-[#201f20] border border-white/5 rounded-lg p-8 md:p-10 flex flex-col gap-7">
+          
+          {/* Card Header */}
+          <div className="flex flex-col gap-2">
+            <h2 className="font-sans text-lg font-semibold text-[#e5e2e3] flex items-center gap-3">
+              <ShieldCheck size={22} className="text-[#4cd7f6]" />
+              Terminal Login
+            </h2>
+            <p className="text-sm text-[#cbc3d7] opacity-70">Enter secure credentials to access the POS network.</p>
           </div>
-        )}
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {loginMode === 'email' ? (
-            <>
-              {/* Email field */}
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-3 text-slate-400" size={16} />
+          {/* Login Mode Toggle */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => { setLoginMode('email'); setError(''); }}
+              className={`py-2.5 rounded-lg text-xs font-semibold transition-all border ${
+                loginMode === 'email'
+                  ? 'bg-primary/10 text-primary border-primary/30'
+                  : 'bg-transparent text-[#cbc3d7] border-white/10 hover:border-white/20'
+              }`}
+            >
+              Email Login
+            </button>
+            <button
+              type="button"
+              onClick={() => { setLoginMode('phone'); setError(''); }}
+              className={`py-2.5 rounded-lg text-xs font-semibold transition-all border ${
+                loginMode === 'phone'
+                  ? 'bg-primary/10 text-primary border-primary/30'
+                  : 'bg-transparent text-[#cbc3d7] border-white/10 hover:border-white/20'
+              }`}
+            >
+              OTP Login
+            </button>
+          </div>
+
+          {/* Error Alert */}
+          {error && (
+            <div className="p-3.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          {/* Form Body */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {loginMode === 'email' ? (
+              <>
+                {/* Terminal ID / Email */}
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs text-[#cbc3d7] tracking-wide" htmlFor="terminal-email">
+                    Terminal ID / Email
+                  </label>
                   <input
+                    id="terminal-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@business.com"
+                    placeholder="demo@billflow.com"
                     required
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
+                    className="w-full py-3.5 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
                   />
                 </div>
-              </div>
-              
-              {/* Password field */}
-              <div className="space-y-1">
-                <div className="flex justify-between items-center">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Security Password</label>
-                  <Link href="/forgot-password" className="text-[11px] font-semibold text-primary hover:underline">
-                    Forgot?
-                  </Link>
+
+                {/* Access Pin / Password */}
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs text-[#cbc3d7] tracking-wide" htmlFor="access-pin">
+                    Access Pin
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="access-pin"
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      className="w-full py-3.5 px-0 pr-10 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm tracking-[0.3em] placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-0 top-3 text-[#958ea0] hover:text-[#e5e2e3] transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-3 text-slate-400" size={16} />
+              </>
+            ) : (
+              <>
+                {/* Phone number */}
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs text-[#cbc3d7] tracking-wide" htmlFor="phone-field">
+                    Mobile Phone Number
+                  </label>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* Phone number field */}
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Mobile Phone Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-3 text-slate-400" size={16} />
-                  <input
+                    id="phone-field"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="98765 43210"
                     required
                     disabled={otpSent}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all disabled:opacity-60"
+                    className="w-full py-3.5 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors disabled:opacity-50"
                   />
                 </div>
-              </div>
 
-              {/* OTP Verification code field */}
-              {otpSent && (
-                <div className="space-y-1 animate-in fade-in slide-in-from-top duration-200">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-400">6-Digit Verification Code</label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={otpCode}
-                    onChange={(e) => setOtpCode(e.target.value)}
-                    placeholder="Enter 123456"
-                    required
-                    className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm font-semibold tracking-widest text-center transition-all"
-                  />
-                  <p className="text-[10px] text-mutedtxt text-center pt-1">
-                    Didn't receive code? <span className="text-primary hover:underline cursor-pointer">Resend OTP</span>
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Role selector dropdown for easy local testing */}
-          <div className="space-y-1 pt-1">
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Simulate Access Role</label>
-            <div className="grid grid-cols-3 gap-2">
-              {(['admin', 'manager', 'cashier'] as const).map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => setSelectedRole(role)}
-                  className={`py-1.5 rounded-lg text-xs font-semibold capitalize border transition-all ${
-                    selectedRole === role
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-slate-200 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-850'
-                  }`}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 mt-2 bg-primary text-white text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-2 disabled:opacity-75"
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <>
-                <ShieldCheck size={18} />
-                {otpSent ? 'Verify & Authenticate' : loginMode === 'email' ? 'Sign In Securely' : 'Request OTP Code'}
+                {/* OTP */}
+                {otpSent && (
+                  <div className="flex flex-col gap-2">
+                    <label className="font-mono text-xs text-[#cbc3d7] tracking-wide" htmlFor="otp-field">
+                      6-Digit Verification Code
+                    </label>
+                    <input
+                      id="otp-field"
+                      type="text"
+                      maxLength={6}
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value)}
+                      placeholder="Enter 123456"
+                      required
+                      className="w-full py-3.5 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm tracking-[0.5em] text-center placeholder:text-[#958ea0]/40 placeholder:tracking-normal focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                    />
+                    <p className="text-[10px] text-[#958ea0] text-center pt-1">
+                      Didn&apos;t receive code? <span className="text-[#4cd7f6] hover:underline cursor-pointer">Resend OTP</span>
+                    </p>
+                  </div>
+                )}
               </>
             )}
-          </button>
-        </form>
 
-        {/* Footer info links */}
-        <div className="text-center pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <p className="text-slate-500">
-            Need an merchant account?{' '}
+            {/* Role selector */}
+            <div className="flex flex-col gap-2 pt-1">
+              <label className="font-mono text-xs text-[#cbc3d7] tracking-wide">Simulate Access Role</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['admin', 'manager', 'cashier'] as const).map((role) => (
+                  <button
+                    key={role}
+                    type="button"
+                    onClick={() => setSelectedRole(role)}
+                    className={`py-2 rounded-lg text-xs font-semibold capitalize border transition-all ${
+                      selectedRole === role
+                        ? 'border-primary/40 bg-primary/10 text-primary'
+                        : 'border-white/10 text-[#958ea0] hover:text-[#e5e2e3] hover:border-white/20'
+                    }`}
+                  >
+                    {role}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Remember Terminal */}
+            <label className="flex items-center gap-3 cursor-pointer group mt-1">
+              <input
+                type="checkbox"
+                className="w-4 h-4 rounded border-[#494454] bg-transparent text-[#4cd7f6] focus:ring-[#4cd7f6]/20 transition-all"
+              />
+              <span className="text-sm text-[#cbc3d7] group-hover:text-[#e5e2e3] transition-colors">Remember Terminal</span>
+            </label>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 rounded-lg bg-primary text-white font-semibold text-sm flex items-center justify-center gap-3 mt-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-75"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  {otpSent ? 'Verify & Authenticate' : loginMode === 'email' ? 'Sign In' : 'Request OTP Code'}
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Forgot Pin Link */}
+          <div className="text-center pt-1">
+            <Link
+              href="/forgot-password"
+              className="font-mono text-xs text-[#cbc3d7] hover:text-[#4cd7f6] transition-colors underline underline-offset-4 decoration-[#494454]"
+            >
+              Forgot Access Pin?
+            </Link>
+          </div>
+        </div>
+
+        {/* Register Link */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-[#958ea0]">
+            Need a merchant account?{' '}
             <Link href="/register" className="font-semibold text-primary hover:underline">
               Create a Store
             </Link>
           </p>
         </div>
 
-      </div>
+        {/* Terminal Status Footer */}
+        <div className="mt-10 flex justify-between items-center opacity-40">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[#4cd7f6] animate-pulse" />
+            <span className="font-mono text-xs text-[#e5e2e3] tracking-wider">NETWORK SECURE</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs text-[#e5e2e3]">v2.4.0-STABLE</span>
+            <ShieldCheck size={16} className="text-[#e5e2e3]" />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

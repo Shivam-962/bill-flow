@@ -196,35 +196,41 @@ export default function RegisterPage() {
                 {/* Free plan */}
                 <div
                   onClick={() => setSelectedPlan('free')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    selectedPlan === 'free' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-800'
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
+                    selectedPlan === 'free' 
+                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
+                      : 'border-slate-200 dark:border-slate-800'
                   }`}
                 >
-                  <p className="font-bold text-sm">Starter Free</p>
-                  <p className="text-xs text-mutedtxt pt-1">Basic POS billing & local database.</p>
-                  <p className="font-poppins font-bold text-lg pt-3">₹0 <span className="text-[10px] font-normal">/month</span></p>
+                  <p className="font-bold text-sm text-slate-800 dark:text-white">Starter Free</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Basic POS billing & local database.</p>
+                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹0 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
                 </div>
                 {/* Premium plan */}
                 <div
                   onClick={() => setSelectedPlan('premium')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    selectedPlan === 'premium' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-800'
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
+                    selectedPlan === 'premium' 
+                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
+                      : 'border-slate-200 dark:border-slate-800'
                   }`}
                 >
                   <p className="font-bold text-sm text-primary">SaaS Premium</p>
-                  <p className="text-xs text-mutedtxt pt-1">Cloud Sync, WhatsApp API & Printer.</p>
-                  <p className="font-poppins font-bold text-lg pt-3">₹999 <span className="text-[10px] font-normal">/month</span></p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Cloud Sync, WhatsApp API & Printer.</p>
+                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹999 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
                 </div>
                 {/* Enterprise plan */}
                 <div
                   onClick={() => setSelectedPlan('enterprise')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    selectedPlan === 'enterprise' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-800'
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
+                    selectedPlan === 'enterprise' 
+                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
+                      : 'border-slate-200 dark:border-slate-800'
                   }`}
                 >
-                  <p className="font-bold text-sm">Enterprise</p>
-                  <p className="text-xs text-mutedtxt pt-1">Multi-branch outlets & API access.</p>
-                  <p className="font-poppins font-bold text-lg pt-3">₹4,999 <span className="text-[10px] font-normal">/month</span></p>
+                  <p className="font-bold text-sm text-slate-800 dark:text-white">Enterprise</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Multi-branch outlets & API access.</p>
+                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹4,999 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
                 </div>
               </div>
             </div>
@@ -241,7 +247,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold hover:bg-slate-50"
+                className="flex-1 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 Go Back
               </button>

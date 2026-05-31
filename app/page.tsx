@@ -2,37 +2,21 @@
 
 import Link from 'next/link';
 import {
-  Sparkles,
-  Zap,
-  TrendingUp,
-  Receipt,
-  ShoppingCart,
-  Layers,
   ArrowRight,
+  HelpCircle,
+  Settings,
   ShieldCheck,
   CheckCircle2,
-  HelpCircle,
-  Mail,
-  Phone,
-  MessageCircle,
-  Printer,
-  Users,
-  ChevronRight
+  Globe,
+  Rss,
+  Package,
+  Receipt,
+  Terminal
 } from 'lucide-react';
-import { useState } from 'react';
 
 export default function LandingPage() {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
-
-  const faqs = [
-    { q: "Is a physical barcode scanner required?", a: "No. You can connect a standard barcode scan gun via USB or Bluetooth, or utilize your device's built-in camera as an immediate mobile scanner." },
-    { q: "Does digital WhatsApp invoice delivery incur extra fees?", a: "Our Starter tier lets you share links manually for free. Premium plans use our cloud WhatsApp automation engine with no per-invoice charges up to standard thresholds." },
-    { q: "Does the system support offline operations?", a: "Yes. In the event of internet drops, BillFlow logs sales queues in local storage and auto-synchronizes transactions once connectivity returns." },
-    { q: "What thermal printers are supported?", a: "We support standard browser print spooling (which routes to any system driver), as well as direct TCP/IP network sockets, raw USB streams, and Bluetooth interfaces." }
-  ];
-
   return (
-    <div className="min-h-screen bg-slatebg dark:bg-darkbg transition-colors duration-200">
+    <div className="min-h-screen bg-[#131314] text-[#e5e2e3] font-sans antialiased selection:bg-red-400 selection:text-black">
       
       {/* Google SEO JSON-LD Structured Data Schema */}
       <script
@@ -54,333 +38,185 @@ export default function LandingPage() {
         }}
       />
 
-      {/* 1. Global Navigation Bar */}
-      <header className="sticky top-0 right-0 z-40 w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/50 px-6 py-4 flex items-center justify-between shadow-sm transition-all duration-300">
-        <div className="flex items-center gap-2 group cursor-pointer">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
-            B
-          </div>
-          <span className="font-poppins font-extrabold text-xl text-slate-850 dark:text-white tracking-tight">
-            BillFlow<span className="text-primary bg-clip-text">.</span>
-          </span>
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-4 bg-[#131314]/80 backdrop-blur-md border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <span className="font-sora text-lg md:text-xl font-bold text-[#F87171]">BillFlow ERP</span>
+        </div>
+        
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-[#cbc3d7]">
+          <a className="hover:text-[#F87171] transition-colors" href="#features">Solutions</a>
+          <a className="hover:text-[#F87171] transition-colors" href="#trust">Enterprise</a>
+          <a className="hover:text-[#F87171] transition-colors" href="#pricing">Pricing</a>
         </div>
 
-        {/* Desktop Links */}
-        <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-500 dark:text-slate-400">
-          <a href="#features" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Features</a>
-          <a href="#pricing" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Pricing</a>
-          <a href="#industries" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">Industries</a>
-          <a href="#faq" className="hover:text-primary transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary hover:after:w-full after:transition-all">FAQ</a>
-        </nav>
-
-        {/* Call to Actions */}
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-primary transition-colors">
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="px-5 py-2.5 bg-primary text-white text-xs font-poppins font-bold rounded-xl shadow-md shadow-primary/10 hover:bg-primary/95 hover:scale-[1.03] transition-all flex items-center gap-1.5"
+          <HelpCircle className="text-[#cbc3d7] cursor-pointer hover:text-[#F87171] transition-colors" size={20} />
+          <Settings className="text-[#cbc3d7] cursor-pointer hover:text-[#F87171] transition-colors" size={20} />
+          <Link 
+            href="/register" 
+            className="px-5 py-2 rounded-lg text-xs font-semibold bg-[#F87171] text-black hover:bg-[#fca5a5] hover:shadow-[0_0_20px_rgba(248,113,113,0.3)] transition-all duration-200"
           >
-            Create Store
-            <ArrowRight size={13} />
+            Get Started
           </Link>
         </div>
-      </header>
+      </nav>
 
-      {/* 2. Hero Header Section */}
-      <section className="relative px-6 py-24 md:py-36 flex flex-col items-center text-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent">
-        {/* Decorative background gradients */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary/10 to-secondary/5 rounded-full blur-3xl -z-10 animate-pulse duration-[6s]"></div>
-
-        <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold font-mono tracking-wider uppercase border border-primary/20 shadow-sm">
-            <Sparkles size={13} className="animate-spin duration-[4s]" />
-            Enterprise Retail ERP Made Simple
-          </div>
-
-          <h1 className="font-poppins font-black text-5xl md:text-7xl text-slate-800 dark:text-white leading-[1.1] tracking-tight">
-            Fast POS Billing & Cloud <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">Inventory SaaS</span>
-          </h1>
-
-          <p className="text-sm md:text-base text-mutedtxt dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
-            Generate tax invoices in under 3 seconds, manage stock quantities dynamically, track customer credit accounts, and instantly deliver PDF receipts directly on WhatsApp.
-          </p>
-
-          <div className="pt-4 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/register"
-              className="px-8 py-3.5 bg-primary text-white text-xs font-poppins font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/95 hover:scale-[1.04] transition-all flex items-center gap-2"
-            >
-              Get Started for Free
-              <ArrowRight size={15} />
-            </Link>
-            <Link
-              href="/login"
-              className="px-8 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:scale-[1.02] shadow-sm transition-all"
-            >
-              Access Demo Login
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Core Features Section */}
-      <section id="features" className="px-6 py-20 bg-white dark:bg-slate-950/40 border-y border-slate-200/50 dark:border-slate-800/50">
-        <div className="max-w-6xl mx-auto space-y-12">
-          
-          <div className="text-center space-y-3">
-            <h2 className="font-poppins font-bold text-2xl md:text-3xl text-slate-800 dark:text-white">
-              Engineered for Modern Shop Operations
-            </h2>
-            <p className="text-xs text-mutedtxt max-w-md mx-auto">
-              Everything your storefront needs to replace paper files and accelerate checkout checkouts.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <main className="pt-20 min-h-screen">
+        {/* Hero Section */}
+        <section className="relative px-6 md:px-12 py-20 overflow-hidden bg-[radial-gradient(circle_at_20%_30%,rgba(248,113,113,0.15)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(109, 59, 215, 0.05)_0%,transparent_50%)]">
+          <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
             
-            {/* POS Checkout */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                <ShoppingCart size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Fast POS Billing</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Add products dynamically via search autocomplete or physical scan gun. Automatically compute CGST/SGST taxes, discounts, and cashier balances.
-              </p>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/10 bg-[#1c1b1c] mb-8 animate-pulse">
+              <span className="flex h-2 w-2 rounded-full bg-red-400"></span>
+              <span className="text-xs font-mono text-[#cbc3d7]">V3.4 Now Live - New POS Terminal Engine</span>
             </div>
 
-            {/* WhatsApp receipt delivery */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-success/10 text-success flex items-center justify-center">
-                <MessageCircle size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">WhatsApp Automation</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Skip paper printing entirely. Deliver gorgeous PDF receipt copies directly to customer numbers via cloud API integration instantly.
-              </p>
-            </div>
+            <h1 className="font-sora text-4xl md:text-6xl font-extrabold mb-6 max-w-4xl tracking-tight leading-tight">
+              Unified ERP for <span className="text-[#F87171]">Beverage Distribution</span>
+            </h1>
 
-            {/* ESC/POS Thermal Printing */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-warning/10 text-warning flex items-center justify-center">
-                <Printer size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Thermal Printer driver</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Print formatted sales slips automatically. Fully compatible with USB, Wi-Fi, and Bluetooth 58mm/80mm thermal paper formats.
-              </p>
-            </div>
-
-            {/* Inventory audit tracking */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center">
-                <Layers size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Dynamic Inventory</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Stock levels decrease automatically upon billing checkout. Configure low stock trigger points, map batch codes, and shelf expiries.
-              </p>
-            </div>
-
-            {/* Customer credits ledger (Udhar) */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                <Users size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Udhar CRM Ledger</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Maintain balances for regular local customers. Check credit lines instantly, post manual collections, and track purchase loyalty points.
-              </p>
-            </div>
-
-            {/* Recharts Analytics dashboard */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/40 dark:border-slate-800/40 space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center">
-                <TrendingUp size={18} />
-              </div>
-              <h3 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Interactive Analytics</h3>
-              <p className="text-xs text-mutedtxt leading-relaxed">
-                Visualize daily and monthly sales numbers, category sales velocity, best-selling SKUs, tax accounts, and operational cost metrics.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* 4. Industries Served Section */}
-      <section id="industries" className="px-6 py-20">
-        <div className="max-w-6xl mx-auto space-y-12">
-          
-          <div className="text-center space-y-3">
-            <h2 className="font-poppins font-bold text-2xl md:text-3xl text-slate-800 dark:text-white">
-              Tailored for Diverse Shop Verticals
-            </h2>
-            <p className="text-xs text-mutedtxt max-w-md mx-auto">
-              Our workflows adjust dynamically to match specific business structures.
+            <p className="text-sm md:text-base text-[#cbc3d7] max-w-2xl mb-10 leading-relaxed">
+              Streamline your wholesale and retail operations with a high-performance ledger designed for high-velocity liquid logistics. Manage inventory, billing, and terminals in one crystalline interface.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link 
+                href="/register" 
+                className="px-8 py-3.5 rounded-lg text-sm font-bold bg-[#F87171] text-black hover:bg-[#fca5a5] hover:shadow-[0_0_25px_rgba(248,113,113,0.45)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+              >
+                Get Started <ArrowRight size={16} />
+              </Link>
+              <Link 
+                href="/login" 
+                className="px-8 py-3.5 rounded-lg text-sm font-bold border border-white/10 bg-transparent text-white hover:bg-white/5 hover:border-white/30 transition-all text-center"
+              >
+                Sign In
+              </Link>
+            </div>
+
+            {/* Dashboard Preview */}
+            <div className="mt-20 w-full max-w-5xl bg-[#0a0a0b]/60 backdrop-blur-md border border-white/5 p-3 rounded-2xl shadow-2xl transition-all duration-300 hover:border-red-400/20">
+              <img
+                alt="ERP Dashboard Interface" 
+                className="rounded-xl w-full opacity-90 hover:opacity-100 transition-opacity duration-300" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQMe3O98gNW550Vm1e8kNZzV5tnuFVqWDnwWsgPmCwOxwlmmDZOguCneMiKeC0I7bILsXqq1M535csvpzCdWQmtA8KQM7ZLmOzvO_4OJaNRypHLdriUPprnryll9k5NXa4iKOS_STcRWNAixQU0FIIngj-Ss6AURhJqPsvOQMpdKOw4P2r0xZC4eS5uxwUBvBwP0w4Y3B4eGENGnnLm6lhxcmlgzP2mo8sr45f3woFsXh4A682eI0s1RI3sEghakuDtzwAa3R_aBWG"
+              />
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-5 text-center bg-white dark:bg-slate-900 border border-slate-200/50 rounded-2xl hover:scale-105 transition-all">
-              <p className="font-bold text-sm text-slate-800 dark:text-white font-poppins">Grocery Stores</p>
-              <p className="text-[10px] text-slate-400 pt-1">Barcode scanner checkout & bulk packets</p>
-            </div>
-            <div className="p-5 text-center bg-white dark:bg-slate-900 border border-slate-200/50 rounded-2xl hover:scale-105 transition-all">
-              <p className="font-bold text-sm text-slate-800 dark:text-white font-poppins">Pharmacies (Medical)</p>
-              <p className="text-[10px] text-slate-400 pt-1">Expiry tracking & lot number filters</p>
-            </div>
-            <div className="p-5 text-center bg-white dark:bg-slate-900 border border-slate-200/50 rounded-2xl hover:scale-105 transition-all">
-              <p className="font-bold text-sm text-slate-800 dark:text-white font-poppins">Fashion & Apparel</p>
-              <p className="text-[10px] text-slate-400 pt-1">Discount tags, barcodes & item sizes</p>
-            </div>
-            <div className="p-5 text-center bg-white dark:bg-slate-900 border border-slate-200/50 rounded-2xl hover:scale-105 transition-all">
-              <p className="font-bold text-sm text-slate-800 dark:text-white font-poppins">Electronics Shops</p>
-              <p className="text-[10px] text-slate-400 pt-1">Serial code lookups & custom invoices</p>
+        {/* Features Grid */}
+        <section id="features" className="px-6 md:px-12 py-24 bg-[#131314]">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              
+              {/* Feature 1 */}
+              <div className="bg-[#0a0a0b]/60 backdrop-blur-md p-8 rounded-2xl border border-white/5 flex flex-col gap-4 transition-all duration-300 hover:border-[#F87171]/20 hover:scale-[1.01] hover:shadow-lg hover:shadow-red-500/5 group">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-red-400/10 mb-2 group-hover:bg-[#F87171]/20 transition-colors">
+                  <Package className="text-[#F87171]" size={28} />
+                </div>
+                <h3 className="font-sora font-semibold text-lg md:text-xl">Real-time Inventory</h3>
+                <p className="text-xs md:text-sm text-[#cbc3d7] leading-relaxed">
+                  Live tracking across multiple warehouses. Automated reordering alerts and batch movement history for total distribution control.
+                </p>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="bg-[#0a0a0b]/60 backdrop-blur-md p-8 rounded-2xl border border-white/5 flex flex-col gap-4 transition-all duration-300 hover:border-[#F87171]/20 hover:scale-[1.01] hover:shadow-lg hover:shadow-red-500/5 group">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-red-400/10 mb-2 group-hover:bg-[#F87171]/20 transition-colors">
+                  <Receipt className="text-[#F87171]" size={28} />
+                </div>
+                <h3 className="font-sora font-semibold text-lg md:text-xl">Smart Wholesale Billing</h3>
+                <p className="text-xs md:text-sm text-[#cbc3d7] leading-relaxed">
+                  Complex pricing tiers and tax calculations handled instantly. Generate professional invoices and track reconciliation in one place.
+                </p>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="bg-[#0a0a0b]/60 backdrop-blur-md p-8 rounded-2xl border border-white/5 flex flex-col gap-4 transition-all duration-300 hover:border-[#F87171]/20 hover:scale-[1.01] hover:shadow-lg hover:shadow-red-500/5 group">
+                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-red-400/10 mb-2 group-hover:bg-[#F87171]/20 transition-colors">
+                  <Terminal className="text-[#F87171]" size={28} />
+                </div>
+                <h3 className="font-sora font-semibold text-lg md:text-xl">Mobile POS Integration</h3>
+                <p className="text-xs md:text-sm text-[#cbc3d7] leading-relaxed">
+                  Connect distribution center billing with retail floor terminals. Synchronized sales data across your entire retail ecosystem.
+                </p>
+              </div>
+
             </div>
           </div>
+        </section>
 
-        </div>
-      </section>
+        {/* Trust Section */}
+        <section id="trust" className="px-6 md:px-12 py-20 bg-[#0e0e0f] border-y border-white/5">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="font-sora text-xl md:text-2xl font-bold mb-12">Built for Performance &amp; Scale</h2>
+            <div className="flex flex-col md:flex-row justify-between gap-12 items-center">
+              
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="text-[#F87171]" size={22} />
+                  <span className="font-sora font-semibold text-base md:text-lg">Secure Terminal Access</span>
+                </div>
+                <p className="text-xs text-[#cbc3d7] max-w-xs">Role-based permissions and end-to-end encryption for every transaction.</p>
+              </div>
 
-      {/* 5. Pricing Section */}
-      <section id="pricing" className="px-6 py-20 bg-white dark:bg-slate-950/40 border-y border-slate-200/50 dark:border-slate-800/50">
-        <div className="max-w-5xl mx-auto space-y-12">
-          
-          <div className="text-center space-y-3">
-            <h2 className="font-poppins font-bold text-2xl md:text-3xl text-slate-800 dark:text-white">
-              Transparent, Flexible Plans
-            </h2>
-            <p className="text-xs text-mutedtxt max-w-md mx-auto">
-              Start with our free offline tier and scale into cloud and hardware sync as you grow.
+              <div className="h-px w-12 md:h-12 md:w-px bg-white/10 hidden md:block"></div>
+
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="text-[#F87171]" size={22} />
+                  <span className="font-sora font-semibold text-base md:text-lg">Enterprise Grade Reliability</span>
+                </div>
+                <p className="text-xs text-[#cbc3d7] max-w-xs">99.99% uptime with global edge synchronization for zero-latency billing.</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section id="pricing" className="px-6 md:px-12 py-32 bg-[#131314] text-center">
+          <div className="max-w-3xl mx-auto bg-[#0a0a0b]/60 backdrop-blur-md p-12 rounded-2xl border border-[#F87171]/20 shadow-xl transition-all duration-300 hover:border-[#F87171]/40">
+            <h2 className="font-sora text-2xl md:text-4xl font-bold mb-6">Ready to optimize your flow?</h2>
+            <p className="text-sm md:text-base text-[#cbc3d7] mb-10">
+              Join the leading beverage distributors who have transformed their logistics with BillFlow.
             </p>
+            <Link 
+              href="/register" 
+              className="inline-block px-10 py-4 rounded-lg text-sm font-bold bg-[#F87171] text-black hover:bg-[#fca5a5] hover:shadow-[0_0_20px_rgba(248,113,113,0.35)] transition-all"
+            >
+              Start Your Free Trial
+            </Link>
           </div>
+        </section>
+      </main>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Starter Free */}
-            <div className="bg-slate-50 dark:bg-slate-900/60 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-6">
-              <div className="space-y-2">
-                <p className="font-bold text-sm text-slate-500 uppercase font-poppins">Starter Free</p>
-                <p className="text-3xl font-bold font-poppins text-slate-800 dark:text-white">₹0</p>
-                <p className="text-xs text-mutedtxt">Perfect for single offline POS billing drawers.</p>
-              </div>
-              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-350">
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Local Database</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Standard POS Terminal</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Browser Print Layouts</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> 200 Unique Catalog SKUs</li>
-              </ul>
-              <Link
-                href="/register"
-                className="w-full py-2.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-center text-xs font-bold transition"
-              >
-                Sign Up Free
-              </Link>
+      {/* Footer */}
+      <footer className="w-full bg-[#1c1b1c] px-6 md:px-12 py-12 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+            <div className="flex flex-col gap-2">
+              <span className="font-sora text-lg font-bold text-[#F87171]">BillFlow ERP</span>
+              <p className="text-xs text-[#cbc3d7] max-w-xs">The ultimate precision tool for the beverage distribution industry.</p>
             </div>
-
-            {/* Cloud Premium */}
-            <div className="bg-slate-50 dark:bg-slate-900/60 p-8 rounded-2xl border-2 border-primary flex flex-col justify-between space-y-6 relative">
-              <div className="absolute top-0 right-6 -translate-y-1/2 px-2.5 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-mono tracking-wider uppercase">
-                Most Popular
-              </div>
-              <div className="space-y-2">
-                <p className="font-bold text-sm text-primary uppercase font-poppins">Cloud Premium</p>
-                <p className="text-3xl font-bold font-poppins text-slate-800 dark:text-white">₹999 <span className="text-xs font-normal">/month</span></p>
-                <p className="text-xs text-mutedtxt">For fast-growing retail outlets seeking CRM & Cloud automations.</p>
-              </div>
-              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-355">
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> Everything in Starter Free</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> Automated WhatsApp Delivery</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> Cloud Database Synchronization</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> Direct Thermal Print Driver</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-primary" /> Udhar credit CRM Ledger</li>
-              </ul>
-              <Link
-                href="/register"
-                className="w-full py-2.5 bg-primary text-white hover:bg-primary/95 rounded-xl text-center text-xs font-bold shadow-lg shadow-primary/15 transition"
-              >
-                Subscribe Premium
-              </Link>
+            <div className="flex flex-wrap justify-center gap-8 text-xs text-[#cbc3d7]">
+              <a className="hover:text-[#F87171] transition-colors" href="#">Privacy Policy</a>
+              <a className="hover:text-[#F87171] transition-colors" href="#">Terms of Service</a>
+              <a className="hover:text-[#F87171] transition-colors" href="#">Contact Support</a>
+              <a className="hover:text-[#F87171] transition-colors" href="#">API Docs</a>
             </div>
-
-            {/* Enterprise */}
-            <div className="bg-slate-50 dark:bg-slate-900/60 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-6">
-              <div className="space-y-2">
-                <p className="font-bold text-sm text-slate-500 uppercase font-poppins">Enterprise</p>
-                <p className="text-3xl font-bold font-poppins text-slate-800 dark:text-white">₹4,999 <span className="text-xs font-normal">/month</span></p>
-                <p className="text-xs text-mutedtxt">Multi-branch outlets requiring custom ERP setups.</p>
-              </div>
-              <ul className="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-350">
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Everything in Premium</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Multi-Branch Syncing</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Custom SLA Core Uptime</li>
-                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-success" /> Dedicated Account Manager</li>
-              </ul>
-              <Link
-                href="/register"
-                className="w-full py-2.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-center text-xs font-bold transition"
-              >
-                Inquire Enterprise
-              </Link>
-            </div>
-
           </div>
-
-        </div>
-      </section>
-
-      {/* 6. FAQ Accordion Section */}
-      <section id="faq" className="px-6 py-20 max-w-3xl mx-auto space-y-8">
-        <h2 className="font-poppins font-bold text-2xl text-center text-slate-800 dark:text-white uppercase tracking-wider">
-          Frequently Answered Questions
-        </h2>
-
-        <div className="space-y-4">
-          {faqs.map((faq, idx) => {
-            const isOpen = faqOpen === idx;
-            return (
-              <div
-                key={idx}
-                className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-xl overflow-hidden shadow-sm"
-              >
-                <button
-                  onClick={() => setFaqOpen(isOpen ? null : idx)}
-                  className="w-full px-5 py-4 flex justify-between items-center text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all font-poppins"
-                >
-                  {faq.q}
-                  <ChevronRight size={14} className={`transform transition-transform ${isOpen ? 'rotate-90 text-primary' : ''}`} />
-                </button>
-                {isOpen && (
-                  <div className="px-5 pb-4 text-xs leading-relaxed text-mutedtxt animate-in fade-in duration-200">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 7. Footer */}
-      <footer className="px-6 py-12 border-t border-slate-200/60 dark:border-slate-800/60 bg-white dark:bg-slate-900 text-center space-y-4">
-        <div className="flex items-center justify-center gap-2">
-          <div className="w-6 h-6 rounded bg-primary flex items-center justify-center text-white font-bold text-sm">
-            B
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#cbc3d7]">
+            <p>&copy; 2026 BillFlow ERP. All rights reserved.</p>
+            <div className="flex gap-4">
+              <Globe className="cursor-pointer hover:text-[#F87171] transition-colors" size={18} />
+              <Rss className="cursor-pointer hover:text-[#F87171] transition-colors" size={18} />
+            </div>
           </div>
-          <span className="font-poppins font-bold text-sm text-slate-800 dark:text-white">
-            BillFlow ERP System
-          </span>
         </div>
-        <p className="text-[11px] text-slate-400">
-          &copy; 2026 BillFlow Inc. All rights reserved. &bull; Privacy Policy &bull; Terms of Use &bull; Safe SSL Checkout
-        </p>
       </footer>
-
     </div>
   );
 }

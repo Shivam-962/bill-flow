@@ -1,6 +1,6 @@
 @echo off
 title BillFlow ERP Local Server Launcher
-SET "PATH=C:\Users\HP\.gemini\antigravity\scratch\node-portable\node-v22.11.0-win-x64;%PATH%"
+SET "PATH=d:\antigravity-scratch\node-portable\node-v22.11.0-win-x64;%PATH%"
 
 echo =======================================================
 echo BillFlow ERP - Local Launcher

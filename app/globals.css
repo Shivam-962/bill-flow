@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Sapphire Blue (Default) */
+    --primary-color: #2563EB;
+    --primary-color-rgb: 37, 99, 235;
+    --secondary-color: #0EA5E9;
+    --accent-color: #14B8A6;
+  }
+
+  .theme-green {
+    --primary-color: #10B981;
+    --primary-color-rgb: 16, 185, 129;
+    --secondary-color: #059669;
+    --accent-color: #06B6D4;
+  }
+
+  .theme-violet {
+    --primary-color: #8B5CF6;
+    --primary-color-rgb: 139, 92, 246;
+    --secondary-color: #7C3AED;
+    --accent-color: #EC4899;
+  }
+
+  .theme-rose {
+    --primary-color: #F43F5E;
+    --primary-color-rgb: 244, 63, 94;
+    --secondary-color: #E11D48;
+    --accent-color: #F59E0B;
+  }
+
+  .theme-orange {
+    --primary-color: #F59E0B;
+    --primary-color-rgb: 245, 158, 11;
+    --secondary-color: #D97706;
+    --accent-color: #10B981;
+  }
+
+  body {
+    @apply bg-slatebg text-txt font-sans antialiased transition-colors duration-200;
+  }
+  body.dark {
+    @apply bg-darkbg text-slate-100;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full;
+}
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 shadow-sm;
+}
+.glass-card {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200/40 dark:border-slate-800/40 shadow-sm rounded-xl p-6 transition-all duration-200 hover:shadow-md hover:border-slate-300/50 dark:hover:border-slate-700/50;
+}
+.glass-input {
+  @apply bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-2 outline-none transition-all;
+}
+
+/* Print CSS */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+.print-only {
+  display: none;
+}

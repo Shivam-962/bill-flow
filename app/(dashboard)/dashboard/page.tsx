@@ -45,14 +45,14 @@ export default function DashboardPage() {
 
   const lowStockCount = products.filter(p => p.stock_qty <= p.low_stock_threshold).length;
 
-  // --- Mock Analytics Data for Recharts Sparkline (if no real invoices) ---
+  // --- Analytics Data for Recharts Sparkline ---
   const recentSalesData = [
-    { hour: '09 AM', sales: todayInvoices.length > 0 ? todaySales * 0.1 : 1200 },
-    { hour: '11 AM', sales: todayInvoices.length > 0 ? todaySales * 0.25 : 3400 },
-    { hour: '01 PM', sales: todayInvoices.length > 0 ? todaySales * 0.2 : 5600 },
-    { hour: '03 PM', sales: todayInvoices.length > 0 ? todaySales * 0.15 : 4500 },
-    { hour: '05 PM', sales: todayInvoices.length > 0 ? todaySales * 0.2 : 7800 },
-    { hour: '07 PM', sales: todayInvoices.length > 0 ? todaySales * 0.1 : 8900 },
+    { hour: '09 AM', sales: todayInvoices.length > 0 ? todaySales * 0.1 : 0 },
+    { hour: '11 AM', sales: todayInvoices.length > 0 ? todaySales * 0.25 : 0 },
+    { hour: '01 PM', sales: todayInvoices.length > 0 ? todaySales * 0.2 : 0 },
+    { hour: '03 PM', sales: todayInvoices.length > 0 ? todaySales * 0.15 : 0 },
+    { hour: '05 PM', sales: todayInvoices.length > 0 ? todaySales * 0.2 : 0 },
+    { hour: '07 PM', sales: todayInvoices.length > 0 ? todaySales * 0.1 : 0 },
   ];
 
   return (
@@ -90,10 +90,10 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-2xl font-bold font-poppins text-slate-800 dark:text-white">
-              ₹{todaySales > 0 ? todaySales.toFixed(2) : '23,450.00'}
+              ₹{todaySales.toFixed(2)}
             </p>
             <p className="text-[10px] text-success font-semibold flex items-center gap-0.5 pt-1">
-              <TrendingUp size={10} /> +12.4% vs yesterday
+              <TrendingUp size={10} /> {todaySales > 0 ? '+12.4% vs yesterday' : 'No sales recorded today'}
             </p>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-2xl font-bold font-poppins text-slate-800 dark:text-white">
-              {todayInvoices.length > 0 ? todayInvoices.length : '45'}
+              {todayInvoices.length}
             </p>
             <p className="text-[10px] text-slate-400 font-semibold pt-1">
               Active checkout sessions
@@ -126,10 +126,10 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-2xl font-bold font-poppins text-slate-800 dark:text-white">
-              ₹{todayProfit > 0 ? todayProfit.toFixed(2) : '3,840.00'}
+              ₹{todayProfit.toFixed(2)}
             </p>
             <p className="text-[10px] text-success font-semibold flex items-center gap-0.5 pt-1">
-              <TrendingUp size={10} /> 16.3% Gross Margin
+              <TrendingUp size={10} /> {todaySales > 0 ? '16.3% Gross Margin' : '0.0% Margin'}
             </p>
           </div>
         </div>

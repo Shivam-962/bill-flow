@@ -45,6 +45,7 @@ interface ErpState {
   deleteProduct: (id: string) => void;
   addCustomer: (customer: Omit<Customer, 'id' | 'credit_balance' | 'loyalty_points'>) => Customer;
   updateCustomer: (id: string, updates: Partial<Customer>) => void;
+  deleteCustomer: (id: string) => void;
   payCustomerCredit: (customerId: string, amount: number, notes?: string) => void;
   addExpense: (amount: number, category: string, notes?: string) => void;
   updateBusiness: (updates: Partial<Business>) => void;
@@ -337,6 +338,11 @@ export const useErpStore = create<ErpState>((set, get) => ({
 
   updateCustomer: (id, updates) => {
     db.updateCustomer(id, updates);
+    get().loadData();
+  },
+
+  deleteCustomer: (id) => {
+    db.deleteCustomer(id);
     get().loadData();
   },
 

@@ -299,6 +299,11 @@ export const db = {
     setLocal(KEYS.CUSTOMERS, customers);
     return customers[idx];
   },
+  deleteCustomer: (id: string): void => {
+    const customers = db.getCustomers();
+    const filtered = customers.filter(c => c.id !== id);
+    setLocal(KEYS.CUSTOMERS, filtered);
+  },
 
   // --- Invoices ---
   getInvoices: (): Invoice[] => {

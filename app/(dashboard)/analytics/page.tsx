@@ -58,15 +58,9 @@ export default function AnalyticsPage() {
     revenue: groupedDates[date]
   })).reverse();
 
-  // If empty, supply default seed curves
+  // If empty, supply a flat line
   const finalDailyData = dailyProgressData.length > 0 ? dailyProgressData : [
-    { date: 'May 19', revenue: 15400 },
-    { date: 'May 20', revenue: 18200 },
-    { date: 'May 21', revenue: 21900 },
-    { date: 'May 22', revenue: 19400 },
-    { date: 'May 23', revenue: 24500 },
-    { date: 'May 24', revenue: 29000 },
-    { date: 'May 25', revenue: totalSalesVal > 0 ? totalSalesVal : 32450 },
+    { date: 'Today', revenue: 0 },
   ];
 
   // 2. Compile Payment Method Splits
@@ -78,10 +72,10 @@ export default function AnalyticsPage() {
   });
 
   const paymentSplitsData = [
-    { name: 'Cash', value: paymentMethodsCounts.cash > 0 ? paymentMethodsCounts.cash : 18500, color: '#22C55E' },
-    { name: 'UPI Scan', value: paymentMethodsCounts.upi > 0 ? paymentMethodsCounts.upi : 24900, color: '#0EA5E9' },
-    { name: 'CardSwipe', value: paymentMethodsCounts.card > 0 ? paymentMethodsCounts.card : 14200, color: '#14B8A6' },
-    { name: 'Udhar due', value: paymentMethodsCounts.credit > 0 ? paymentMethodsCounts.credit : 8400, color: '#F59E0B' },
+    { name: 'Cash', value: paymentMethodsCounts.cash, color: '#22C55E' },
+    { name: 'UPI Scan', value: paymentMethodsCounts.upi, color: '#0EA5E9' },
+    { name: 'CardSwipe', value: paymentMethodsCounts.card, color: '#14B8A6' },
+    { name: 'Udhar due', value: paymentMethodsCounts.credit, color: '#F59E0B' },
   ];
 
   // 3. Compile top selling items
@@ -105,13 +99,7 @@ export default function AnalyticsPage() {
     .sort((a, b) => b.sales - a.sales)
     .slice(0, 5);
 
-  const finalBestSellers = sortedBestSellers.length > 0 ? sortedBestSellers : [
-    { name: 'Marie Gold Biscuits', sales: 4800, qty: 160 },
-    { name: 'Aashirvaad Atta 5k', sales: 4160, qty: 16 },
-    { name: 'Mother Dairy Milk', sales: 3300, qty: 50 },
-    { name: 'Colgate Teeth 200g', sales: 2200, qty: 20 },
-    { name: 'Dettol Handwash', sales: 1980, qty: 20 },
-  ];
+  const finalBestSellers = sortedBestSellers;
 
   return (
     <div className="space-y-6">
@@ -126,7 +114,7 @@ export default function AnalyticsPage() {
           <div>
             <p className="text-xs text-mutedtxt font-bold uppercase">Total Compiled Revenue</p>
             <p className="text-2xl font-bold font-poppins text-slate-800 dark:text-white">
-              ₹{totalSalesVal > 0 ? totalSalesVal.toFixed(2) : '1,40,900.00'}
+              ₹{totalSalesVal.toFixed(2)}
             </p>
           </div>
         </div>
@@ -138,7 +126,7 @@ export default function AnalyticsPage() {
           <div>
             <p className="text-xs text-mutedtxt font-bold uppercase">Estimated Gross Profit</p>
             <p className="text-2xl font-bold font-poppins text-success">
-              ₹{netMargin > 0 ? netMargin.toFixed(2) : '24,310.00'}
+              ₹{netMargin.toFixed(2)}
             </p>
           </div>
         </div>
@@ -150,7 +138,7 @@ export default function AnalyticsPage() {
           <div>
             <p className="text-xs text-mutedtxt font-bold uppercase">Tax Collections (GST)</p>
             <p className="text-2xl font-bold font-poppins text-warning">
-              ₹{totalGstVal > 0 ? totalGstVal.toFixed(2) : '11,420.00'}
+              ₹{totalGstVal.toFixed(2)}
             </p>
           </div>
         </div>

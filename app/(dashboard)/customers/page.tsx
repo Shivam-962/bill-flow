@@ -17,7 +17,8 @@ import {
   CheckCircle,
   X,
   MapPin,
-  FileText
+  FileText,
+  Trash2
 } from 'lucide-react';
 
 export default function CustomersPage() {
@@ -25,6 +26,7 @@ export default function CustomersPage() {
     customers,
     addCustomer,
     payCustomerCredit,
+    deleteCustomer,
     invoices,
     loadData
   } = useErpStore();
@@ -99,6 +101,16 @@ export default function CustomersPage() {
     setPaymentAmount(0);
     setPaymentNotes('');
     alert(`Successfully collected payment of ₹${paymentAmount.toFixed(2)} from ${activeCustomer.name}`);
+  };
+
+  const handleDeleteCustomer = () => {
+    if (!activeCustomer) return;
+    const confirmDelete = window.confirm(`Are you sure you want to permanently delete the customer account for "${activeCustomer.name}"?`);
+    if (confirmDelete) {
+      deleteCustomer(activeCustomer.id);
+      setSelectedCustomerId(null);
+      alert('Customer account deleted successfully.');
+    }
   };
 
   return (
@@ -201,16 +213,27 @@ export default function CustomersPage() {
                 </div>
               </div>
 
-              {/* Action collect dues */}
-              {activeCustomer.credit_balance > 0 && (
+              {/* Action collect dues and delete */}
+              <div className="flex gap-2">
+                {activeCustomer.credit_balance > 0 && (
+                  <button
+                    onClick={() => setIsCollectPaymentOpen(true)}
+                    className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 shadow-md shadow-primary/25 flex items-center gap-1.5"
+                  >
+                    <DollarSign size={14} />
+                    Record Udhar Payment
+                  </button>
+                )}
+                
                 <button
-                  onClick={() => setIsCollectPaymentOpen(true)}
-                  className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/95 shadow-md shadow-primary/25 flex items-center gap-1.5"
+                  type="button"
+                  onClick={handleDeleteCustomer}
+                  className="p-2 border border-error/30 hover:border-error hover:bg-error/5 text-error rounded-xl transition-all"
+                  title="Delete Customer Account"
                 >
-                  <DollarSign size={14} />
-                  Record Udhar Payment
+                  <Trash2 size={16} />
                 </button>
-              )}
+              </div>
             </div>
 
             {/* Profile Metrics summary */}

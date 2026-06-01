@@ -13,7 +13,8 @@ import {
   Cpu,
   Database,
   BarChart,
-  HardDrive
+  HardDrive,
+  Trash2
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -26,15 +27,25 @@ import {
 } from 'recharts';
 
 export default function AdminPage() {
-  const { loadData } = useErpStore();
+  const { 
+    loadData, 
+    registeredUsers, 
+    loadUsers, 
+    approveUser, 
+    rejectUser, 
+    updateUserRole, 
+    deleteRegisteredUser, 
+    currentUser 
+  } = useErpStore();
   const [logs, setLogs] = useState<any[]>([]);
   const [latency, setLatency] = useState(145);
 
   useEffect(() => {
     loadData();
+    loadUsers();
     // Load WhatsApp edge function status logs
     setLogs(whatsapp.getLogs());
-  }, [loadData]);
+  }, [loadData, loadUsers]);
 
   // Simulate cloud telemetry
   const handleSimulatePulse = () => {
@@ -174,6 +185,112 @@ export default function AdminPage() {
           </div>
         </div>
 
+      </div>
+
+      {/* User Management Section */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-850 flex items-center justify-between">
+          <div>
+            <h4 className="font-poppins font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">
+              User Authorizations & Access Control
+            </h4>
+            <p className="text-[10px] text-slate-400 font-medium">Manage cashiers/managers and approve or revoke their access status</p>
+          </div>
+          <span className="text-[10px] bg-primary/10 text-primary font-bold px-3 py-1 rounded-full font-mono">
+            {registeredUsers.length} Registered
+          </span>
+        </div>
+
+        <div className="overflow-x-auto">
+          {registeredUsers.length === 0 ? (
+            <div className="p-8 text-center text-slate-400 text-xs">
+              No registered user accounts found in database.
+            </div>
+          ) : (
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200/60 text-slate-600 dark:text-slate-400 text-xs font-bold font-poppins">
+                  <th className="px-6 py-3">User Details</th>
+                  <th className="px-6 py-3">Phone</th>
+                  <th className="px-6 py-3">Access Level (Role)</th>
+                  <th className="px-6 py-3">Access Status</th>
+                  <th className="px-6 py-3 text-right">Administrative Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-850 text-xs font-medium">
+                {registeredUsers.map(u => {
+                  const isSelf = currentUser?.userId === u.id;
+                  return (
+                    <tr key={u.id} className="hover:bg-slate-50/50">
+                      <td className="px-6 py-3.5">
+                        <div className="font-bold text-slate-800 dark:text-white">{u.name}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">{u.email}</div>
+                      </td>
+                      <td className="px-6 py-3.5 font-mono text-slate-500">{u.phone || 'N/A'}</td>
+                      <td className="px-6 py-3.5">
+                        <select
+                          value={u.role}
+                          disabled={isSelf}
+                          onChange={(e) => updateUserRole(u.id, e.target.value as any)}
+                          className="bg-transparent border border-slate-200 dark:border-slate-800 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-primary outline-none disabled:opacity-60 text-slate-800 dark:text-slate-200"
+                        >
+                          <option value="admin" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">Admin</option>
+                          <option value="manager" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">Manager</option>
+                          <option value="cashier" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">Cashier</option>
+                        </select>
+                        {isSelf && (
+                          <span className="text-[9px] text-primary bg-primary/10 ml-2 px-1.5 py-0.5 rounded font-bold">YOU</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-3.5">
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                          u.status === 'approved'
+                            ? 'bg-success/15 text-success'
+                            : u.status === 'pending'
+                            ? 'bg-warning/15 text-warning'
+                            : 'bg-error/15 text-error'
+                        }`}>
+                          {u.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3.5 text-right space-x-1.5">
+                        {u.status !== 'approved' && (
+                          <button
+                            onClick={() => approveUser(u.id)}
+                            className="px-2.5 py-1 rounded bg-success/10 hover:bg-success/20 text-success text-[10px] font-bold transition"
+                          >
+                            Approve
+                          </button>
+                        )}
+                        {u.status !== 'rejected' && !isSelf && (
+                          <button
+                            onClick={() => rejectUser(u.id)}
+                            className="px-2.5 py-1 rounded bg-error/10 hover:bg-error/20 text-error text-[10px] font-bold transition"
+                          >
+                            Reject/Block
+                          </button>
+                        )}
+                        {!isSelf && (
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`Are you sure you want to permanently delete the user account for ${u.name}?`)) {
+                                deleteRegisteredUser(u.id);
+                              }
+                            }}
+                            className="p-1 rounded hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition inline-flex items-center align-middle"
+                            title="Delete User Account"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
 
       {/* Cloud Auditing Logs */}

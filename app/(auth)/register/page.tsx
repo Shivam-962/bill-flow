@@ -4,274 +4,258 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useErpStore } from '@/store/useErpStore';
 import Link from 'next/link';
-import { Store, User, Mail, Phone, ArrowRight, ShieldAlert } from 'lucide-react';
-import { razorpay } from '@/lib/razorpay';
+import { Store, User, Mail, Phone, ArrowRight, Lock, CheckCircle2 } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { updateBusiness, login } = useErpStore();
+  const { register, login, updateBusiness } = useErpStore();
 
-  // State forms
-  const [storeName, setStoreName] = useState('My Local Supermart');
-  const [ownerName, setOwnerName] = useState('Rajesh Patel');
-  const [email, setEmail] = useState('rajesh@localmart.com');
-  const [phone, setPhone] = useState('9876543210');
-  const [invoicePrefix, setInvoicePrefix] = useState('LM');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [storeName, setStoreName] = useState('');
+  const [invoicePrefix, setInvoicePrefix] = useState('');
   const [gstin, setGstin] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState<'free' | 'premium' | 'enterprise'>('free');
-  
-  const [step, setStep] = useState(1);
+
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<'admin' | 'pending' | null>(null);
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(2);
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+    setError('');
     setLoading(true);
 
-    // If premium plan selected, simulate Razorpay payment setup
-    if (selectedPlan !== 'free') {
-      try {
-        const amt = selectedPlan === 'premium' ? 99900 : 499900; // in paisa
-        await razorpay.openCheckout({
-          amount: amt,
-          currency: 'INR',
-          name: 'BillFlow ERP licensing',
-          description: `Subscription activation for ${storeName} (${selectedPlan.toUpperCase()})`,
-          handler: (response) => {
-            console.log('Payment checkout success callback:', response);
-            alert(`Payment Successful!\nTransaction ID: ${response.razorpay_payment_id}\nYour account is now activated!`);
-            finalizeSignup();
-          },
-          prefill: {
-            name: ownerName,
-            email: email,
-            contact: phone
-          }
-        });
-      } catch (err) {
-        console.error('Payment checkout failed:', err);
-        setLoading(false);
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      setLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      const result = register({ email, name, phone: phone || undefined, password });
+      setLoading(false);
+
+      if (!result.success) {
+        setError(result.error || 'Registration failed.');
         return;
       }
-    } else {
-      finalizeSignup();
-    }
+
+      if (result.isFirstUser) {
+        // First user = admin, auto-login and set up business
+        if (storeName) {
+          updateBusiness({
+            name: storeName,
+            phone: phone,
+            invoice_prefix: invoicePrefix.toUpperCase() || 'BF',
+            gstin: gstin || undefined,
+          });
+        }
+        login(email, password);
+        setSuccess('admin');
+        setTimeout(() => router.push('/dashboard'), 1500);
+      } else {
+        // Subsequent users need admin approval
+        setSuccess('pending');
+      }
+    }, 800);
   };
 
-  const finalizeSignup = () => {
-    // 1. Update business in DB
-    updateBusiness({
-      name: storeName,
-      gstin: gstin || undefined,
-      phone: phone,
-      invoice_prefix: invoicePrefix.toUpperCase(),
-    });
+  // Success states
+  if (success === 'admin') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#131314] px-4">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <CheckCircle2 size={32} className="text-emerald-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Admin Account Created!</h2>
+          <p className="text-sm text-[#cbc3d7]">Setting up your workspace...</p>
+          <div className="w-8 h-8 mx-auto border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
-    // 2. Set current operator session
-    login(email, 'admin');
-
-    setLoading(false);
-    router.push('/dashboard');
-  };
+  if (success === 'pending') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#131314] px-4">
+        <div className="max-w-md text-center space-y-5 bg-[#201f20] border border-white/5 rounded-lg p-10">
+          <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/20 flex items-center justify-center">
+            <CheckCircle2 size={32} className="text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Registration Submitted!</h2>
+          <p className="text-sm text-[#cbc3d7] leading-relaxed">
+            Your account has been created but requires <strong className="text-white">admin approval</strong> before you can access the system. Please contact your administrator.
+          </p>
+          <Link
+            href="/login"
+            className="inline-block mt-4 px-6 py-3 bg-primary text-white text-sm font-semibold rounded-lg hover:brightness-110 transition-all"
+          >
+            Back to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slatebg dark:bg-darkbg px-4 py-12 transition-colors duration-200">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-xl rounded-2xl p-8 space-y-6">
-        
-        {/* Step progress tracker */}
-        <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2">
-            <span className="font-poppins font-bold text-lg text-slate-800 dark:text-white">
-              Create Merchant Account
-            </span>
-          </div>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full font-mono">
-            STEP {step} OF 2
-          </span>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#131314] px-4 py-12 relative overflow-hidden">
 
-        {step === 1 ? (
-          <form onSubmit={handleNextStep} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Business / Shop Name</label>
-                <div className="relative">
-                  <Store className="absolute left-3.5 top-3 text-slate-400" size={16} />
-                  <input
-                    type="text"
-                    value={storeName}
-                    onChange={(e) => setStoreName(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                  />
-                </div>
-              </div>
+      {/* Background */}
+      <div className="fixed bottom-0 left-0 w-full h-[30vh] opacity-20 pointer-events-none z-0">
+        <img
+          className="w-full h-full object-cover"
+          alt="Server room"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ5dSnmnhWBV1CxH0KhTRY2FLTUBq9kuWhcqozKUFAIcYgvOT0j2BYXvs8cDIVcIwHwFbV9wbAroS2tMOtWfHr-8d6pwu7AsLSQmGyB9xgDR3cB3F934elfujujRAwAs9vOBU18b3amrhgQWn616TbTEy4sr-qeynkOgfa97CVtoWp99ATApbRhuayLXIATS8zHj3bgKVhxGD4Q-teFwEEzywwHgmpgrRsaqA-XkiFEqtL3mJVfaeqNxpI-TlTkdHVBox2PLb0ZCTz"
+        />
+      </div>
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Owner Full Name</label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-3 text-slate-400" size={16} />
-                  <input
-                    type="text"
-                    value={ownerName}
-                    onChange={(e) => setOwnerName(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                  />
-                </div>
-              </div>
+      <main className="w-full max-w-[500px] relative z-10">
 
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-3 text-slate-400" size={16} />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Primary Contact Phone</label>
-                <div className="relative">
-                  <Phone className="absolute left-3.5 top-3 text-slate-400" size={16} />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">GSTIN / Tax Number (Optional)</label>
-                <input
-                  type="text"
-                  maxLength={15}
-                  value={gstin}
-                  onChange={(e) => setGstin(e.target.value.toUpperCase())}
-                  placeholder="29AAAAA1111A1Z1"
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Bill Invoice Prefix</label>
-                <input
-                  type="text"
-                  maxLength={5}
-                  value={invoicePrefix}
-                  onChange={(e) => setInvoicePrefix(e.target.value)}
-                  placeholder="e.g. BF, TX, LM"
-                  required
-                  className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl outline-none text-sm transition-all font-bold"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-2.5 mt-4 bg-primary text-white text-sm font-semibold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all flex items-center justify-center gap-2"
-            >
-              Continue to Plans
-              <ArrowRight size={16} />
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleRegister} className="space-y-6">
-            {/* SaaS Tiers selector */}
-            <div className="space-y-3">
-              <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Select Subscription Tier</label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {/* Free plan */}
-                <div
-                  onClick={() => setSelectedPlan('free')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
-                    selectedPlan === 'free' 
-                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
-                      : 'border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <p className="font-bold text-sm text-slate-800 dark:text-white">Starter Free</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Basic POS billing & local database.</p>
-                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹0 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
-                </div>
-                {/* Premium plan */}
-                <div
-                  onClick={() => setSelectedPlan('premium')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
-                    selectedPlan === 'premium' 
-                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
-                      : 'border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <p className="font-bold text-sm text-primary">SaaS Premium</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Cloud Sync, WhatsApp API & Printer.</p>
-                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹999 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
-                </div>
-                {/* Enterprise plan */}
-                <div
-                  onClick={() => setSelectedPlan('enterprise')}
-                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] hover:border-primary/50 dark:hover:border-primary/50 ${
-                    selectedPlan === 'enterprise' 
-                      ? 'border-primary bg-primary/5 shadow-md shadow-primary/5' 
-                      : 'border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <p className="font-bold text-sm text-slate-800 dark:text-white">Enterprise</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 pt-1">Multi-branch outlets & API access.</p>
-                  <p className="font-poppins font-bold text-lg pt-3 text-slate-900 dark:text-slate-100">₹4,999 <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">/month</span></p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800/50 rounded-xl flex items-start gap-2.5">
-              <ShieldAlert className="text-primary mt-0.5" size={16} />
-              <p className="text-[10px] leading-relaxed text-mutedtxt">
-                If selecting Premium or Enterprise, clicking "Finalize Setup" will trigger our Razorpay Checkout window in simulated mode.
-              </p>
-            </div>
-
-            {/* Navigation buttons */}
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="flex-1 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-              >
-                Go Back
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 py-2.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary/95 shadow-md shadow-primary/20 flex items-center justify-center gap-2"
-              >
-                {loading ? 'Processing...' : 'Finalize & Activate'}
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <p className="text-slate-500">
-            Already have an active account?{' '}
-            <Link href="/login" className="font-semibold text-primary hover:underline">
-              Sign In Here
-            </Link>
+        {/* Brand */}
+        <div className="text-center mb-8">
+          <h1 className="font-sans text-2xl font-extrabold tracking-tight mb-2 text-primary">
+            BillFlow
+          </h1>
+          <p className="font-mono text-xs text-[#cbc3d7] tracking-[0.2em] uppercase">
+            Create Your Account
           </p>
         </div>
 
-      </div>
+        {/* Registration Card */}
+        <div className="bg-[#201f20] border border-white/5 rounded-lg p-8 flex flex-col gap-6">
+
+          {error && (
+            <div className="p-3.5 text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleRegister} className="flex flex-col gap-5">
+            {/* Personal Info */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                  <User size={12} /> Full Name
+                </label>
+                <input
+                  type="text" value={name} onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name" required
+                  className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                  <Mail size={12} /> Email
+                </label>
+                <input
+                  type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com" required
+                  className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                <Phone size={12} /> Phone (optional)
+              </label>
+              <input
+                type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
+                placeholder="98765 43210"
+                className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                  <Lock size={12} /> Password
+                </label>
+                <input
+                  type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min 6 characters" required minLength={6}
+                  className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                  <Lock size={12} /> Confirm Password
+                </label>
+                <input
+                  type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Repeat password" required
+                  className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Business Info (optional but encouraged) */}
+            <div className="pt-3 border-t border-white/5">
+              <p className="font-mono text-[10px] text-[#958ea0] mb-3 uppercase tracking-wider">Business Details (for first admin setup)</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs text-[#cbc3d7] tracking-wide flex items-center gap-1.5">
+                    <Store size={12} /> Store Name
+                  </label>
+                  <input
+                    type="text" value={storeName} onChange={(e) => setStoreName(e.target.value)}
+                    placeholder="My Business"
+                    className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-mono text-xs text-[#cbc3d7] tracking-wide">
+                    Invoice Prefix
+                  </label>
+                  <input
+                    type="text" maxLength={5} value={invoicePrefix}
+                    onChange={(e) => setInvoicePrefix(e.target.value)}
+                    placeholder="e.g. BF"
+                    className="w-full py-3 px-0 bg-transparent border-0 border-b border-white/10 text-[#e5e2e3] font-mono text-sm placeholder:text-[#958ea0]/40 focus:ring-0 focus:border-[#4cd7f6] outline-none transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 rounded-lg bg-primary text-white font-semibold text-sm flex items-center justify-center gap-3 mt-2 shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-75"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  Create Account
+                  <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+
+        {/* Login link */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-[#958ea0]">
+            Already have an account?{' '}
+            <Link href="/login" className="font-semibold text-primary hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </div>
+      </main>
     </div>
   );
 }

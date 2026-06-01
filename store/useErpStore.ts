@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { db, Product, Customer, Category, Invoice, Business, PrinterSettings, PaymentSplit, InvoiceItem, CreditTx, Expense } from '../lib/db';
+import { db, Product, Customer, Category, Invoice, Business, PrinterSettings, PaymentSplit, InvoiceItem, CreditTx, Expense, RegisteredUser } from '../lib/db';
 
 interface CartItem {
   product: Product;
@@ -25,7 +25,7 @@ interface ErpState {
   themeColor: 'blue' | 'green' | 'violet' | 'rose' | 'orange';
   checkoutCount: number;
   showFeedbackPrompt: boolean;
-  currentUser: { email: string; role: 'admin' | 'manager' | 'cashier' } | null;
+  currentUser: { email: string; role: 'admin' | 'manager' | 'cashier'; name: string; userId: string } | null;
 
   // --- POS Actions ---
   addToCart: (product: Product, qty?: number) => void;
@@ -54,8 +54,18 @@ interface ErpState {
   dismissFeedbackPrompt: () => void;
 
   // --- Auth Actions ---
-  login: (email: string, role: 'admin' | 'manager' | 'cashier') => void;
+  login: (email: string, password: string) => { success: boolean; error?: string; status?: string };
   logout: () => void;
+  register: (data: { email: string; name: string; phone?: string; password: string }) => { success: boolean; error?: string; isFirstUser?: boolean };
+
+  // --- User Management (Admin) ---
+  registeredUsers: RegisteredUser[];
+  loadUsers: () => void;
+  approveUser: (userId: string) => void;
+  rejectUser: (userId: string) => void;
+  updateUserRole: (userId: string, role: 'admin' | 'manager' | 'cashier') => void;
+  deleteRegisteredUser: (userId: string) => void;
+  resetDatabase: () => void;
 }
 
 export const useErpStore = create<ErpState>((set, get) => ({
@@ -73,10 +83,11 @@ export const useErpStore = create<ErpState>((set, get) => ({
   invoices: [],
   printerSettings: { printer_type: 'browser', paper_size_mm: 80 },
   theme: 'light',
-  themeColor: 'violet',
+  themeColor: 'blue',
   checkoutCount: 0,
   showFeedbackPrompt: false,
   currentUser: null,
+  registeredUsers: [],
 
   // --- POS Actions ---
   addToCart: (product, qty = 1) => {
@@ -266,7 +277,17 @@ export const useErpStore = create<ErpState>((set, get) => ({
     const savedUser = localStorage.getItem('bf_session');
     if (savedUser) {
       try {
-        currentUser = JSON.parse(savedUser);
+        const parsed = JSON.parse(savedUser);
+        // Verify user exists and is still approved in local database
+        const dbUsers = db.getRegisteredUsers();
+        const dbUser = dbUsers.find(u => u.id === parsed.userId);
+        if (dbUser && dbUser.status === 'approved') {
+          currentUser = { ...parsed, role: dbUser.role };
+          // Keep local storage session in sync with current details
+          localStorage.setItem('bf_session', JSON.stringify(currentUser));
+        } else {
+          localStorage.removeItem('bf_session');
+        }
       } catch (err) {
         console.error('Failed to parse saved session:', err);
         localStorage.removeItem('bf_session'); // clear corrupted state
@@ -369,14 +390,64 @@ export const useErpStore = create<ErpState>((set, get) => ({
   },
 
   // --- Auth Actions ---
-  login: (email, role) => {
-    const session = { email, role };
+  login: (email, password) => {
+    const user = db.authenticateUser(email, password);
+    if (!user) {
+      return { success: false, error: 'Invalid email or password.' };
+    }
+    if (user.status === 'pending') {
+      return { success: false, error: 'Your account is pending admin approval.', status: 'pending' };
+    }
+    if (user.status === 'rejected') {
+      return { success: false, error: 'Your account access has been denied by the administrator.', status: 'rejected' };
+    }
+    const session = { email: user.email, role: user.role, name: user.name, userId: user.id };
     localStorage.setItem('bf_session', JSON.stringify(session));
     set({ currentUser: session });
+    return { success: true };
   },
 
   logout: () => {
     localStorage.removeItem('bf_session');
     set({ currentUser: null });
-  }
+  },
+
+  register: (data) => {
+    try {
+      const user = db.registerUser(data);
+      return { success: true, isFirstUser: user.role === 'admin' };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Registration failed.' };
+    }
+  },
+
+  // --- User Management (Admin) ---
+  loadUsers: () => {
+    set({ registeredUsers: db.getRegisteredUsers() });
+  },
+
+  approveUser: (userId) => {
+    db.approveUser(userId);
+    set({ registeredUsers: db.getRegisteredUsers() });
+  },
+
+  rejectUser: (userId) => {
+    db.rejectUser(userId);
+    set({ registeredUsers: db.getRegisteredUsers() });
+  },
+
+  updateUserRole: (userId, role) => {
+    db.updateUserRole(userId, role);
+    set({ registeredUsers: db.getRegisteredUsers() });
+  },
+
+  deleteRegisteredUser: (userId) => {
+    db.deleteRegisteredUser(userId);
+    set({ registeredUsers: db.getRegisteredUsers() });
+  },
+
+  resetDatabase: () => {
+    db.clearAllBusinessData();
+    get().loadData();
+  },
 }));

@@ -10,7 +10,9 @@ import {
   Users,
   ShieldCheck,
   CheckCircle2,
-  Lock
+  Lock,
+  AlertTriangle,
+  Trash2
 } from 'lucide-react';
 
 export default function SettingsPage() {
@@ -23,7 +25,8 @@ export default function SettingsPage() {
     themeColor,
     setThemeColor,
     theme,
-    toggleTheme
+    toggleTheme,
+    resetDatabase
   } = useErpStore();
 
   useEffect(() => {
@@ -31,7 +34,18 @@ export default function SettingsPage() {
   }, [loadData]);
 
   // Tab controls
-  const [activeTab, setActiveTab] = useState<'store' | 'hardware' | 'team' | 'theme'>('store');
+  const [activeTab, setActiveTab] = useState<'store' | 'hardware' | 'team' | 'theme' | 'danger'>('store');
+
+  const handleWipeData = () => {
+    const doubleCheck = window.confirm(
+      "WARNING: Are you absolutely sure you want to wipe all local business data?\n\nThis will completely delete all products, stock levels, categories, invoices, customer credits, and expenses.\n\nYour administrator accounts and login credentials will not be deleted.\n\nThis action cannot be undone."
+    );
+    if (doubleCheck) {
+      resetDatabase();
+      alert("Database wiped successfully. The system has been reset.");
+      setActiveTab('store');
+    }
+  };
 
   // Store profile form inputs
   const [bizName, setBizName] = useState(business.name);
@@ -131,6 +145,18 @@ export default function SettingsPage() {
         >
           <Settings size={16} />
           App Theme Styling
+        </button>
+
+        <button
+          onClick={() => setActiveTab('danger')}
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold font-poppins transition ${
+            activeTab === 'danger'
+              ? 'bg-error text-white shadow-md shadow-error/20'
+              : 'bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 text-error hover:bg-red-500/5'
+          }`}
+        >
+          <Trash2 size={16} />
+          Danger Zone
         </button>
       </div>
 
@@ -429,6 +455,41 @@ export default function SettingsPage() {
                     </div>
                   </button>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'danger' && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-base font-bold font-poppins text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <Trash2 size={18} className="text-error" />
+                Danger Zone
+              </h3>
+              <p className="text-[11px] text-slate-400 font-medium">Irreversible administrative operations</p>
+            </div>
+            
+            <div className="p-5 border border-red-500/25 bg-red-500/5 rounded-2xl space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle size={18} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-800 dark:text-white">Wipe All Local Database Data</h4>
+                  <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">
+                    This will delete all products, stock levels, categories, customers, billing invoices, udhar ledger credits, and expense items. Your business settings and administrator account will not be affected. This action cannot be undone.
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleWipeData}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl shadow-md shadow-red-500/10 transition"
+                >
+                  Wipe Database Data
+                </button>
               </div>
             </div>
           </div>

@@ -8,15 +8,15 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "var(--primary-color)",
+          DEFAULT: "rgba(var(--primary-color-rgb), <alpha-value>)",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "var(--secondary-color)",
+          DEFAULT: "rgba(var(--secondary-color-rgb), <alpha-value>)",
           foreground: "#FFFFFF",
         },
         accent: {
-          DEFAULT: "var(--accent-color)",
+          DEFAULT: "rgba(var(--accent-color-rgb), <alpha-value>)",
           foreground: "#FFFFFF",
         },
         success: {

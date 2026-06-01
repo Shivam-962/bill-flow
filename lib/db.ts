@@ -8,6 +8,17 @@ export interface UserProfile {
   role: 'admin' | 'manager' | 'cashier';
 }
 
+export interface RegisteredUser {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  password: string;
+  role: 'admin' | 'manager' | 'cashier';
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}
+
 export interface Business {
   id: string;
   name: string;
@@ -127,34 +138,16 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 export const isSupabaseConfigured = supabaseUrl !== '' && supabaseKey !== '';
 export const supabase = isSupabaseConfigured ? createClient(supabaseUrl, supabaseKey) : null;
 
-// --- Mock Seed Data ---
-const DEFAULT_PRODUCTS: Product[] = [
-  { id: 'p1', name: 'Crystal Still', category_id: 'cat1', barcode: '8901063013284', sku: 'GW-202', purchase_price: 30.0, selling_price: 45.0, gst_rate: 18, stock_qty: 45, low_stock_threshold: 10, batch_no: 'B291', expiry_date: '2026-12-31', image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDxPrsMx6mtuyKWU8OSXRJlVt2goIskVXyk3RuNHlfIYZghpi0zJk_Q0z5HSVSoYoN1Dbdixj_H-8pyFh97ieAZ6j6-IO7uRrKALbv4Ux47V7Mj-6U9JKOVOPII-NXta0LRYTW1Bi3nUVBafNNmgscE1ksbRBJ2GN6yr8fNl6pcthevP5NvsKdKb06jdWgjwQyNpGlA4P7wENb62EkhVHRI-j0s13-Gqq_uIuR_V-ZtvPqDbEz1ZpI4HLBHq-OcA4Ov6gZXg4XB8Wku' },
-  { id: 'p2', name: 'Vintage Cola', category_id: 'cat1', barcode: '8901058002316', sku: 'GW-105', purchase_price: 25.0, selling_price: 39.5, gst_rate: 18, stock_qty: 120, low_stock_threshold: 15, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEqnwZo3MNj1RGbXGis7xN0uNbCZahKVriVN9bn-DL9FAArCeYaikOqxsJ5aQydsdFoXvlpbtdwZd9sFyN2gCPFo_5XLWvFa9s4CGGQuslOXJl117jE2dU7JyssgK8BgVmU7PaZcy7_s96add8vtoMqxX2DYIyeZfduSkwkG5qoV3-cMcI2tiqcjeR3gQGHh1twp8BrN0wURfK-0uL5GAmy_N-qAovIRpsZb2OTIBLapXM7Zg5UnKOZCJtToe0-kPJgtX5Dg-ij13P' },
-  { id: 'p3', name: 'Solar Citrus', category_id: 'cat1', barcode: '8901725181228', sku: 'GW-308', purchase_price: 35.0, selling_price: 52.0, gst_rate: 18, stock_qty: 24, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBtuFnQbqK3eDpbeZ0eH0PDzypd_UnV9v97kXlPb_OfvsNrCcSEmldOSpEngyoGhGgk3NkYKha8LWrUj7oUbnBglc2HfGE1GDsBGJIXgWXMEe6RjqesG3n7RgdSzTmM8-c7qY6Ff-mGGVLhWzf8ITpn9h03KSWSSbOKSQ9l_1zXHupImXsa4-R0h91TqT5OYBI-Lkr1IqNt4sAyKIS1LTUPURpm2ev6myxr5HEU4p3C4_DKhNqyBwO4Jh-bM9gttIp03gzJbuh_HC4n' },
-  { id: 'p4', name: 'Glacier Lime', category_id: 'cat1', barcode: '8901396328639', sku: 'GW-401', purchase_price: 32.0, selling_price: 47.5, gst_rate: 18, stock_qty: 32, low_stock_threshold: 6, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDotAzFZK3Lgx_ebYSzGtIkqyR2U2vEJgaucjF2L_mvQLC4GJ7YAY5Emkq5PtkL6Ds3JJ5sm37S9qOGabnW3OVS6bbVhTyRZquDFd-bBy2bwBcD5YLo27W8DufGq0T4STPLwmcLDvh_JC15h_hSqRyQOKV1nQwtR9YGdZJNrgcq2tnzjYkhpVR23V-U08bu8REJTl4R5xtI8JaXIEG3QrcuQo_osTg0uJry1AZj2ZnykvzgsX7HgXwG2Kr1rwFAS0AslhKNwC9l_OC' },
-  { id: 'p5', name: 'Artisanal Quartet', category_id: 'cat2', barcode: '8901117101035', sku: 'GW-ALL', purchase_price: 100.0, selling_price: 145.0, gst_rate: 18, stock_qty: 15, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida/ADBb0ui7PO_WSXawmHRt65PtLqRD8mwRR3YWnxab-lLAbKnSWjCt8saAVwFdoQSwm8A2pkFadOookBDTcGNKuBAgXJcfYHs0QUsSddzDBRqdu3FZ_ZzNxT1yqo-NO8Gw2D5txD1j5UP0a8uBIFGQp_dmZqCIuUf4pAUG3KLH7ZrrgEh1QNp0-7JHEKadXsjjT_xUJRAJIlti_8BoGxP0MuFSPcHujxFZIdLIcyyk9duoIJCgI21Zlo6zzNjRDWyO' },
-  { id: 'p6', name: 'Silver Label', category_id: 'cat2', barcode: '8901262010019', sku: 'GW-SILVER', purchase_price: 55.0, selling_price: 80.0, gst_rate: 18, stock_qty: 18, low_stock_threshold: 5, image_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDY4mOh4iIvppZi2MEkT5dr2BTkifvg4VZiv4Xc8RwPbV1pIAjDhK8CFiA33Bkkv18AsFsbgAkUpLD8ZH6WEzjy2X1QclYTyg0LH_ZrtZd3fOTnMiJHUz3dw7hPYXlqVMWPflto5OyK5EbXuKQcI0TWtVNcg-QWMEU6lzSJ_B_BdYu4QPww389x0a6OooCnaV9ZuJAeg2-eiu7Jaqe_y_bCGTCLyFbrznmUi9tlaQsFGlM4OV3YCcI4pvywk5D4_IffOIJ6xQ8MGjhS' },
-];
-
-const DEFAULT_CUSTOMERS: Customer[] = [
-  { id: 'c1', name: 'Rajesh Kumar', phone: '9876543210', address: 'Flat 402, Green Glen Layout, Bangalore', gstin: '29AAAAA1111A1Z1', credit_balance: 1250.0, loyalty_points: 150 },
-  { id: 'c2', name: 'Sunita Sharma', phone: '8765432109', address: 'HSR Layout, Sector 3, Bangalore', credit_balance: 0.0, loyalty_points: 80 },
-  { id: 'c3', name: 'Vijay Patel', phone: '7654321098', address: 'Indiranagar, Bangalore', credit_balance: 420.0, loyalty_points: 210 },
-];
-
-const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'cat1', name: 'Sparkling & Still' },
-  { id: 'cat2', name: 'Artisanal & Reserve' }
-];
+// --- Empty Defaults (No Demo Data) ---
+const DEFAULT_PRODUCTS: Product[] = [];
+const DEFAULT_CUSTOMERS: Customer[] = [];
+const DEFAULT_CATEGORIES: Category[] = [];
 
 const DEFAULT_BUSINESS: Business = {
   id: 'b-default',
-  name: 'Glacier White POS',
-  gstin: '29GSTIN1234F1Z0',
-  phone: '9999888877',
-  address: '12th Main Road, HSR Layout, Sector 6, Bangalore - 560102',
-  invoice_prefix: 'GW',
+  name: 'BillFlow ERP',
+  phone: '',
+  invoice_prefix: 'BF',
   currency: 'INR',
 };
 
@@ -173,6 +166,7 @@ const KEYS = {
   CREDITS: 'bf_credits',
   EXPENSES: 'bf_expenses',
   PRINTER: 'bf_printer',
+  USERS: 'bf_registered_users',
 };
 
 // Safe LocalStorage getters/setters
@@ -417,5 +411,83 @@ export const db = {
     const updated = { ...current, ...settings };
     setLocal(KEYS.PRINTER, updated);
     return updated;
-  }
+  },
+
+  // --- User Registration & Access Control ---
+  getRegisteredUsers: (): RegisteredUser[] => {
+    return getLocal<RegisteredUser[]>(KEYS.USERS, []);
+  },
+
+  registerUser: (user: { email: string; name: string; phone?: string; password: string }): RegisteredUser => {
+    const users = db.getRegisteredUsers();
+    // Check if email already exists
+    const exists = users.find(u => u.email.toLowerCase() === user.email.toLowerCase());
+    if (exists) throw new Error('An account with this email already exists.');
+
+    const isFirstUser = users.length === 0;
+    const newUser: RegisteredUser = {
+      id: 'usr_' + Date.now(),
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      password: user.password,
+      role: isFirstUser ? 'admin' : 'cashier',
+      status: isFirstUser ? 'approved' : 'pending',
+      created_at: new Date().toISOString(),
+    };
+    users.push(newUser);
+    setLocal(KEYS.USERS, users);
+    return newUser;
+  },
+
+  authenticateUser: (email: string, password: string): RegisteredUser | null => {
+    const users = db.getRegisteredUsers();
+    const user = users.find(
+      u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+    );
+    return user || null;
+  },
+
+  approveUser: (userId: string): RegisteredUser => {
+    const users = db.getRegisteredUsers();
+    const idx = users.findIndex(u => u.id === userId);
+    if (idx === -1) throw new Error('User not found');
+    users[idx].status = 'approved';
+    setLocal(KEYS.USERS, users);
+    return users[idx];
+  },
+
+  rejectUser: (userId: string): RegisteredUser => {
+    const users = db.getRegisteredUsers();
+    const idx = users.findIndex(u => u.id === userId);
+    if (idx === -1) throw new Error('User not found');
+    users[idx].status = 'rejected';
+    setLocal(KEYS.USERS, users);
+    return users[idx];
+  },
+
+  updateUserRole: (userId: string, role: 'admin' | 'manager' | 'cashier'): RegisteredUser => {
+    const users = db.getRegisteredUsers();
+    const idx = users.findIndex(u => u.id === userId);
+    if (idx === -1) throw new Error('User not found');
+    users[idx].role = role;
+    setLocal(KEYS.USERS, users);
+    return users[idx];
+  },
+
+  deleteRegisteredUser: (userId: string): void => {
+    const users = db.getRegisteredUsers();
+    const filtered = users.filter(u => u.id !== userId);
+    setLocal(KEYS.USERS, filtered);
+  },
+
+  clearAllBusinessData: (): void => {
+    setLocal(KEYS.PRODUCTS, DEFAULT_PRODUCTS);
+    setLocal(KEYS.CUSTOMERS, DEFAULT_CUSTOMERS);
+    setLocal(KEYS.CATEGORIES, DEFAULT_CATEGORIES);
+    setLocal(KEYS.INVOICES, []);
+    setLocal(KEYS.CREDITS, []);
+    setLocal(KEYS.EXPENSES, []);
+    setLocal(KEYS.PRINTER, DEFAULT_PRINTER);
+  },
 };
